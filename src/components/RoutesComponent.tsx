@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
+import { useMapsLibrary, useMap, AdvancedMarker } from '@vis.gl/react-google-maps';
 import { getOrigin } from '../Navigation/getOrigin';
 import useStore from '../store';
 import { NavigationManager } from '../Navigation/NavigationManager';
@@ -27,22 +27,24 @@ export const RoutesComponent = () => {
                 await initializeOrigin();
             }
             await navigation();
+            console.log(navigationManager.currentDirectionsRoute)
         };
-        const navigation = async () =>{
+        const navigation = async () => {
             if (!destination) {
-                
+
                 await defaultRoute()
             } else {
-                
+
                 await testingRoute()
             }
         }
         const defaultRoute = async () => {
             await navigationManager!.navigationService(start, end);
         }
-        const testingRoute = async () =>{
+        const testingRoute = async () => {
+
+            await navigationManager!.navigationService(origin!, destination);
             
-            await navigationManager!.navigationService(origin!, end);
         }
         const initializeNavigationManager = () => {
             const newNavManager = new NavigationManager(map!, mapsLib!, routesLib!);
@@ -58,7 +60,7 @@ export const RoutesComponent = () => {
     }, [routesLib, map, mapsLib, origin, navigationManager, destination]);
 
     return <div>
-
+        {origin && <AdvancedMarker position={origin} />}
 
     </div>;
 };

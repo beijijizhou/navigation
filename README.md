@@ -12,26 +12,14 @@ This novel assistive navigation system is designed specifically for visually imp
 
 ## Installation
 
-1. **Install backend dependencies:**
-### Prerequisites (Assume in the project folder directory)
 
-Ensure you have the following software installed on your machine:
-- Python (version 3.6 or higher)
-- pip (Python package installer)
-- Virtualenv (optional but recommended for managing dependencies)<br />
-cd backend<br />
-python -m venv venv<br />
-source venv/bin/activate <br />
-pip install -r requirements.txt<br />
 
-2. **Install frontend dependencies:**<br />
+1. **Install frontend dependencies:**<br />
 npm install<br />
 
 ## Upcoming Features
-1. Online map navigation service
-2. User input 
-3. GPS real time updates
-4. Navigation Broadcast
+1. GPS real time updates
+2. Navigation Broadcast
 
 
 

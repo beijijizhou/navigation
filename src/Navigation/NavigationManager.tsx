@@ -3,46 +3,53 @@
 // import { getSidewalkAccessibility } from '../api/getSidewalkAccessibility';
 // import { processWKBArray } from '../utils/readWKB';
 
+// import { location } from "../types";
+
+
+type location = string | google.maps.LatLng | google.maps.Place | google.maps.LatLngLiteral;
+
+
 export class NavigationManager {
   map: google.maps.Map;
   mapsLib: google.maps.MapsLibrary;
   routesLib: google.maps.RoutesLibrary;
- 
-  directionsRenderers: google.maps.DirectionsRenderer | null = null;
+  directionsRenderers: google.maps.DirectionsRenderer
   currentDirectionsRoute: google.maps.DirectionsRoute | null = null;
+  
+
   constructor(map: google.maps.Map, mapsLib: google.maps.MapsLibrary, routesLib: google.maps.RoutesLibrary) {
     this.map = map;
     this.mapsLib = mapsLib;
     this.routesLib = routesLib;
-    this.initDirectionsRenderers();
-  }
-  initDirectionsRenderers(){
     const rendererOptions = {
       map: this.map
     };
     this.directionsRenderers = new this.routesLib.DirectionsRenderer(rendererOptions);
-  }
-  clearRenderResults() {
-    // Remove previous directions renderers from the map
-    
-    this.directionsRenderers?.setMap(null);
+
   }
 
-  async navigationService(start: google.maps.LatLngLiteral, end: google.maps.LatLngLiteral) {
+  clearRenderResults() {
+    // Remove previous directions renderers from the map
+
+    this.directionsRenderers.setMap(null);
+  }
+
+  async navigationService(start: location, end: location) {
     // if (!this.routes) {
 
     //   return
     // }
     await this.getDirections(start, end)
-    
+
     // const wkb = await getSidewalkAccessibility(this.routes);
     // const MultiPolygonArrays = processWKBArray(wkb)
     // console.log(MultiPolygonArrays)
     // plot(MultiPolygonArrays, this.mapsLib, this.map)
 
   }
-  getDirections = async (start: google.maps.LatLngLiteral, end: google.maps.LatLngLiteral) => {
+  getDirections = async (start: location, end: location) => {
     const directionsService = new this.routesLib.DirectionsService();
+    console.log(start, end)
     const directionsRequest: google.maps.DirectionsRequest = {
       destination: end,
       origin: start,
@@ -53,9 +60,7 @@ export class NavigationManager {
       directionsService.route(directionsRequest, (result: google.maps.DirectionsResult | null, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
           if (result) {
-            this.clearRenderResults();
-            
-            this.directionsRenderers!.setDirections(result);
+            this.directionsRenderers.setDirections(result);
             this.currentDirectionsRoute = result.routes[0];
             resolve(); // Resolve the promise after setting currentDirectionsRoute
           } else {
@@ -69,7 +74,7 @@ export class NavigationManager {
       });
     });
   };
- 
+
 
 
 }
