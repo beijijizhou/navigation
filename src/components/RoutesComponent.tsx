@@ -5,17 +5,13 @@ import useStore from '../store';
 import { NavigationManager } from '../Navigation/NavigationManager';
 const start = { lat: 40.713536, lng: -74.011223 };
 const end = { lat: 40.7284405, lng: -74.0 };
-
 export const RoutesComponent = () => {
-    // const [routes, setRoutes] = useState(null);
     const [navigationManager, setNavigationManager] = useState<NavigationManager | null>(null)
     const routesLib = useMapsLibrary('routes');
     const map = useMap();
     const mapsLib = useMapsLibrary('maps');
-
     const [origin, setOrigin] = useState<google.maps.LatLngLiteral | null>(null)
     const destination = useStore((state) => state.destination);
-    // const setUserInput = useStore((state) => state.setUserInput);
     useEffect(() => {
         const startService = async () => {
             if (!routesLib || !map || !mapsLib) return;
@@ -27,14 +23,12 @@ export const RoutesComponent = () => {
                 await initializeOrigin();
             }
             await navigation();
-            console.log(navigationManager.currentDirectionsRoute)
+            // console.log(navigationManager.currentDirectionsRoute)
         };
         const navigation = async () => {
             if (!destination) {
-
                 await defaultRoute()
             } else {
-
                 await testingRoute()
             }
         }
@@ -42,9 +36,7 @@ export const RoutesComponent = () => {
             await navigationManager!.navigationService(start, end);
         }
         const testingRoute = async () => {
-
             await navigationManager!.navigationService(origin!, destination);
-            
         }
         const initializeNavigationManager = () => {
             const newNavManager = new NavigationManager(map!, mapsLib!, routesLib!);
@@ -55,7 +47,6 @@ export const RoutesComponent = () => {
             const location = await getOrigin();
             setOrigin(location);
         };
-
         startService();
     }, [routesLib, map, mapsLib, origin, navigationManager, destination]);
 

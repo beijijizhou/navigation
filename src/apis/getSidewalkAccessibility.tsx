@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { location } from '../Type';
 const url = `http://localhost:5000/api/data?`;
 
 // Define the function that fetches the sidewalk accessibility data
-export const getSidewalkAccessibility = async (linePoints) => {
+
+export const getSidewalkAccessibility = async (linePoints : location[]) => {
     try {
       // Construct the URL with query parameters
       

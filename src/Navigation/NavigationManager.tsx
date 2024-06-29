@@ -1,12 +1,11 @@
 
 // import { plot } from './plot';
-// import { getSidewalkAccessibility } from '../api/getSidewalkAccessibility';
-// import { processWKBArray } from '../utils/readWKB';
+import { getSidewalkAccessibility } from '../apis/getSidewalkAccessibility';
+import { WKBArrayToMultiPolygon } from '../utils/readWKB';
+import { location } from '../Type';
 
-// import { location } from "../types";
+import { plot } from './plot';
 
-
-type location = string | google.maps.LatLng | google.maps.Place | google.maps.LatLngLiteral;
 
 
 export class NavigationManager {
@@ -15,7 +14,7 @@ export class NavigationManager {
   routesLib: google.maps.RoutesLibrary;
   directionsRenderers: google.maps.DirectionsRenderer
   currentDirectionsRoute: google.maps.DirectionsRoute | null = null;
-  
+  LatLngLiteralArray: google.maps.LatLngLiteral[] | [] = [];
 
   constructor(map: google.maps.Map, mapsLib: google.maps.MapsLibrary, routesLib: google.maps.RoutesLibrary) {
     this.map = map;
@@ -41,15 +40,15 @@ export class NavigationManager {
     // }
     await this.getDirections(start, end)
 
-    // const wkb = await getSidewalkAccessibility(this.routes);
-    // const MultiPolygonArrays = processWKBArray(wkb)
+    const WKBstringArray: string[] = await getSidewalkAccessibility(this.LatLngLiteralArray);
+    const MultiPolygonArrays = WKBArrayToMultiPolygon(WKBstringArray)
     // console.log(MultiPolygonArrays)
-    // plot(MultiPolygonArrays, this.mapsLib, this.map)
+    plot(MultiPolygonArrays, this.mapsLib, this.map)
 
   }
   getDirections = async (start: location, end: location) => {
     const directionsService = new this.routesLib.DirectionsService();
-    console.log(start, end)
+    // console.log(start, end)
     const directionsRequest: google.maps.DirectionsRequest = {
       destination: end,
       origin: start,
@@ -62,6 +61,7 @@ export class NavigationManager {
           if (result) {
             this.directionsRenderers.setDirections(result);
             this.currentDirectionsRoute = result.routes[0];
+            this.LatLngLiteralArray = this.directionsRouteToLatLngArray(this.currentDirectionsRoute)
             resolve(); // Resolve the promise after setting currentDirectionsRoute
           } else {
             console.error(new Error('No directions found.'));
@@ -74,7 +74,13 @@ export class NavigationManager {
       });
     });
   };
-
+  directionsRouteToLatLngArray(route: google.maps.DirectionsRoute) {
+    return route.legs.flatMap(leg =>
+      leg.steps.flatMap(step =>
+        step.path.map(latLng => ({ lat: latLng.lat(), lng: latLng.lng() }))
+      )
+    );
+  }
 
 
 }
