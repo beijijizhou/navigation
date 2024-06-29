@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useMapsLibrary, useMap, AdvancedMarker } from '@vis.gl/react-google-maps';
-import { getOrigin } from '../Navigation/getOrigin';
+import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
+import { PositionMarker } from './PositionMarker';
+import { getOrigin } from '../Navigation/getCurrentPosition';
 import useStore from '../store';
 import { NavigationManager } from '../Navigation/NavigationManager';
 const start = { lat: 40.713536, lng: -74.011223 };
@@ -9,16 +10,22 @@ export const RoutesComponent = () => {
     const [navigationManager, setNavigationManager] = useState<NavigationManager | null>(null)
     const routesLib = useMapsLibrary('routes');
     const map = useMap();
+
     const mapsLib = useMapsLibrary('maps');
     const [origin, setOrigin] = useState<google.maps.LatLngLiteral | null>(null)
     const destination = useStore((state) => state.destination);
+    const setMap = useStore((state => state.setMap))
     useEffect(() => {
         const startService = async () => {
+            if (map) {
+                setMap(map);
+            }
             if (!routesLib || !map || !mapsLib) return;
             if (!navigationManager) {
-                initializeNavigationManager();
+                // 
                 return;
             }
+            initializeNavigationManager();
             if (!origin) {
                 await initializeOrigin();
             }
@@ -48,10 +55,10 @@ export const RoutesComponent = () => {
             setOrigin(location);
         };
         startService();
-    }, [routesLib, map, mapsLib, origin, navigationManager, destination]);
+    }, [routesLib, map, mapsLib, origin, navigationManager, destination, setMap]);
 
     return <div>
-        {origin && <AdvancedMarker position={origin} />}
+        {map && <PositionMarker></PositionMarker>}
 
     </div>;
 };
