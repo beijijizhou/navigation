@@ -1,14 +1,10 @@
-import { create} from 'zustand';
-import { createDestinationSlice, DestinationSlice} from './useDestinationSlice';
+import { create } from 'zustand';
+import { createNavigationSlice, NavigationSlice } from './useNavigationSlice';
 import { GoogleMapsSlice, createGoogleMapsSlice } from './useGoogleMapsSlice';
-const useStore = create<DestinationSlice & GoogleMapsSlice>()((...a) => ({
-  ...createDestinationSlice(...a),
+const useStore = create<NavigationSlice & GoogleMapsSlice>()((...a) => ({
+  ...createNavigationSlice(...a),
   ...createGoogleMapsSlice(...a)
 }))
 export default useStore;
-// const useStore = create((...a) => ({
-//   ...createDestinationSlice(...a),
-//   ...createGoogleMapsSlice(...a)
-// }))
-// export default useStore;
+
 
