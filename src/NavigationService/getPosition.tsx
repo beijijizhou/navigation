@@ -9,7 +9,7 @@ const options = {
   maximumAge: 0
 };
 
-export const getOrigin = async (): Promise<google.maps.LatLngLiteral> => {
+export const getPosition = async (): Promise<google.maps.LatLngLiteral> => {
   try {
     const position = await getCurrentPosition();
     return position;

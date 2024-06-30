@@ -5,7 +5,7 @@ import useStore from '../store';
 export const PositionMarker: React.FC = () => {
     const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
     const [watchId, setWatchId] = useState<number | null>(null);
-    const map = useStore((state) => state.Map);
+    const map = useStore((state) => state.map);
     const startTime = new Date().getTime();
     let watchTimes = 0;
     const successCallback = (position: GeolocationPosition) => {
@@ -14,12 +14,12 @@ export const PositionMarker: React.FC = () => {
         const origin = { lat: latitude, lng: longitude }
         setCurrentPosition(origin);
         map!.setCenter(origin)
-        watchTimes ++;
+        watchTimes++;
         const endTime = new Date().getTime();
         const elapsedTime = endTime - startTime;
         console.log('Task took ' + elapsedTime + ' milliseconds');
         console.log(origin)
-        console.log("Watch times "+ watchTimes)
+        console.log("Watch times " + watchTimes)
     };
 
     const errorCallback = (error: GeolocationPositionError) => {
@@ -33,7 +33,7 @@ export const PositionMarker: React.FC = () => {
             timeout: 50,
             maximumAge: 0
         });
-    
+
         setWatchId(id);
     };
 
@@ -46,11 +46,11 @@ export const PositionMarker: React.FC = () => {
 
     useEffect(() => {
 
-        if (map){
-            
+        if (map) {
+
             startWatchingPosition();
         }
-    
+
         return () => {
             stopWatchingPosition();
         };
@@ -58,7 +58,7 @@ export const PositionMarker: React.FC = () => {
 
     return (
         <AdvancedMarker position={currentPosition}>
-           
+
 
         </AdvancedMarker>
     );

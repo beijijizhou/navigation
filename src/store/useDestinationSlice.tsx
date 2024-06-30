@@ -1,12 +1,13 @@
 
 import { StateCreator } from 'zustand';
+import { location } from '../Type';
 
 export interface DestinationSlice {
-  destination: string;
-  setDestination: (newDestination: string) => void;
+  destination: location;
+  setDestination: (newDestination: location) => void;
 }
 
 export const createDestinationSlice: StateCreator<DestinationSlice, [], []> = (set) => ({
   destination: "",
-  setDestination: (newDestination: string) => set({ destination: newDestination }),
+  setDestination: (newDestination: location) => set({ destination: newDestination }),
 });
