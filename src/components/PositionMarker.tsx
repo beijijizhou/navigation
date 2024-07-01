@@ -2,36 +2,44 @@ import React, { useEffect, useState } from 'react';
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 
-export const PositionMarker: React.FC = () => {
-    const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
+export const PositionMarker = () => {
+    const { origin, map, setOrigin } = useStore((state) => state);
     const [watchId, setWatchId] = useState<number | null>(null);
-    const map = useStore((state) => state.map);
+    let watchTimes = 0
+
     const startTime = new Date().getTime();
-    let watchTimes = 0;
+
     const successCallback = (position: GeolocationPosition) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        const origin = { lat: latitude, lng: longitude }
-        setCurrentPosition(origin);
-        map!.setCenter(origin)
-        watchTimes++;
+        const newOrigin = { lat: latitude, lng: longitude };
+        setOrigin(newOrigin);
+        if (watchTimes === 0 && map) {
+            
+            map.setCenter(newOrigin);
+        }
+        watchTimes ++;
         const endTime = new Date().getTime();
         const elapsedTime = endTime - startTime;
         console.log('Task took ' + elapsedTime + ' milliseconds');
-        console.log(origin)
-        console.log("Watch times " + watchTimes)
+        console.log(newOrigin);
+        console.log('Watch times ' + watchTimes);
     };
 
     const errorCallback = (error: GeolocationPositionError) => {
         console.error('Error getting position:', error.message);
-        // Handle the error
     };
 
     const startWatchingPosition = () => {
+        if (!navigator.geolocation) {
+            console.error('Geolocation is not supported by this browser.');
+            return;
+        }
+
         const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
             enableHighAccuracy: true,
-            timeout: 50,
-            maximumAge: 0
+            timeout: 5000,
+            maximumAge: 0,
         });
 
         setWatchId(id);
@@ -45,23 +53,22 @@ export const PositionMarker: React.FC = () => {
     };
 
     useEffect(() => {
-
         if (map) {
-
             startWatchingPosition();
         }
 
         return () => {
             stopWatchingPosition();
         };
-    }, [map]); // Empty dependency array ensures effect runs only on mount and unmount
-
+    }, [map]); // Ensure effect runs correctly with required dependencies
+    useEffect(() => {
+        console.log('Origin updated:', origin); // Log whenever origin updates
+    }, [origin]);
     return (
-        <AdvancedMarker position={currentPosition}>
-
-
-        </AdvancedMarker>
+        <div>
+            {origin ? <AdvancedMarker position={origin} /> : <p>
+                {origin}
+                </p>}
+        </div>
     );
 };
-
-
