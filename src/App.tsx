@@ -7,7 +7,7 @@ const start = { lat: 40.713536, lng: -74.011223 };
 // const end = { lat: 40.7484405, lng: -73.985664 };
 
 
-function App() {
+export const App =() => {
 
   const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -32,4 +32,3 @@ function App() {
   );
 }
 
-export default App;

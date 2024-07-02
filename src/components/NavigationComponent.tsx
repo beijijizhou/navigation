@@ -34,7 +34,6 @@ export const NavigationComponent = () => {
 
     useEffect(() => {
         if (!routesLib || !map || !mapsLib) return;
-
         navigationServiceStart();
     }, [routesLib, map, mapsLib, setMap, destination]);
 

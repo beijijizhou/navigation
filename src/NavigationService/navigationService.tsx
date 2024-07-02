@@ -31,6 +31,7 @@ export const getDirections = async (start: locationType, end: locationType) => {
                     directionsRenderers!.setDirections(result);
                     setCurrentDirectionsRoute(result.routes[0]);
                     const latLngArray = directionsRouteToLatLngArray(result.routes[0]);
+                    // console.log(latLngArray)
                     setLatLngLiteralArray(latLngArray);
                     resolve();
                 } else {
@@ -51,7 +52,7 @@ export const navigationServiceStart = async () => {
     const end = { lat: 40.7284405, lng: -74.0 };
     // await getDirections(start, end);
     const home = { lat: 40.7898507, lng: -73.807 };
-    const destination = { lat: 40.7898507, lng: -73.8078221 }
+    const destination = { lat: 40.7919567, lng: -73.8173405 }
     if (destination && home) {
         // console.log(home, destination)
         await getDirections(home, destination);
