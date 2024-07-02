@@ -69,7 +69,7 @@ export const PositionMarker = () => {
             {origin ? <AdvancedMarker position={origin} /> : <p>
                 {origin}
             </p>}
-            <input id= "test" className='test'></input>
+            {/* <input id= "test" className='test'></input> */}
         </div>
     );
 };

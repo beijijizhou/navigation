@@ -67,10 +67,4 @@ button:focus-visible {
   }
 }
 
-#positionMarker, .positionMarker {
-  /* Ensure visibility and dimensions are appropriately set */
-  /* Example styles: */
-  width: 100px;
-  height: 100px; /* Adjust as necessary */
-  /* Add other necessary styles */
-}
+
