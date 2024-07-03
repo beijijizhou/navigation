@@ -14,10 +14,11 @@ export const PositionMarker = () => {
         const longitude = position.coords.longitude;
         const newOrigin = { lat: latitude, lng: longitude };
         setOrigin(newOrigin);
-        if (watchTimes === 0 && map) {
-
-            map.setCenter(newOrigin);
-        }
+        // if (watchTimes === 0 && map) {
+        //     console.log("set new center")
+            
+        // }
+        map!.setCenter(newOrigin);
         watchTimes++;
         const endTime = new Date().getTime();
         const elapsedTime = endTime - startTime;
@@ -65,11 +66,11 @@ export const PositionMarker = () => {
         console.log('Origin updated:', origin); // Log whenever origin updates
     }, [origin]);
     return (
-        <div id= "positionMarker" >
+        <h1 id= "positionMarker" >
             {origin ? <AdvancedMarker position={origin} /> : <p>
                 {origin}
             </p>}
-            {/* <input id= "test" className='test'></input> */}
-        </div>
+            <input id= "test" className='test' ></input>
+        </h1>
     );
 };

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { pointsArray } from "./points";
+import { geoLocation } from "./points";
 function mockLocation(win: Window, index: number) {
 
   cy.stub(win.navigator.geolocation, "getCurrentPosition").callsFake((success, error) => {
-    const { lat: latitude, lng: longitude } = pointsArray[index];
+    const { lat: latitude, lng: longitude } = geoLocation[index];
     console.log(latitude, longitude)
     if (latitude && longitude) {
       const position = {
@@ -32,7 +32,7 @@ describe('Mock Geo Location', () => {
     console.log("123")
     console.log("ready");
     // cy.get('#positionMarker', { timeout: 1000 }).should('be.visible')
-    
+
     cy.window().then((win) => {
       console.log(win);
     });
