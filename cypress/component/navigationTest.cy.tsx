@@ -13,28 +13,27 @@ describe('PositionMarker Component', async () => {
   it('should render correctly and update position', () => {
     mount(<App />);
 
-    cy.get('#positionMarker', { timeout: 1000 }).should('be.visible')
+    cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
 
-    console.log("test Location", geoLocation)
+    
 
 
     let index = -1
-    const nextPosition = (index: number) => {
+    const nextPosition = (index: number,latLngLiteralArray ) => {
+      // const { latLngLiteralArray } = useStore.getState();
       index++;
-      console.log(index)
-      if (index == geoLocation.length) {
+      if (index == latLngLiteralArray.length) {
         index = 0;
       }
       return index
     }
     const setLocation = () => {
-      const { setOrigin, map } = useStore.getState();
+      const { setOrigin, map,latLngLiteralArray } = useStore.getState();
       // console.log(map)
-      if (map) {
-
-        index = nextPosition(index);
-        const position = geoLocation[index]
+      if (map && latLngLiteralArray) {
+        index = nextPosition(index, latLngLiteralArray);
+        const position = latLngLiteralArray[index]
         setOrigin(position)
         console.log(index)
         map!.setCenter(position)
@@ -42,7 +41,7 @@ describe('PositionMarker Component', async () => {
 
     };
 
-    // const intervalID = setInterval(setLocation, 1000);
+    const intervalID = setInterval(setLocation, 1000);
 
     // intervalID();
     // for(let i = 0; i < geoLocation.length; i++){

@@ -56,7 +56,7 @@ export default function SearchBar() {
     if (!service) return null;
 
     return (
-        <div style={{ margin: "10px", position: "relative" }}>
+        <div className="searchBar" style={{ margin: "10px", position: "relative" }}>
             <h4>Search By Name</h4>
             <div style={{ marginBottom: "10px" }}>
                 <input
@@ -100,7 +100,10 @@ export default function SearchBar() {
                     Search
                 </button>
             </div>
-            <PositionMarker></PositionMarker>
+            <div >
+                <PositionMarker></PositionMarker>
+            </div>
+
         </div>
     );
 }

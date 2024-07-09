@@ -51,9 +51,9 @@ export default function Boardcast() {
       }else{
         const d = calculateDistance(endLocation, origin)
         // console.log(latLngLiteralArray)
-        if(d < 4){
-          alert("entering the next steps")
-        }
+        // if(d < 4){
+        //   alert("entering the next steps")
+        // }
       }
     }
 
