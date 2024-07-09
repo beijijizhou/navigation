@@ -16,7 +16,8 @@ export const NavigationComponent = () => {
     useEffect(() => {
         const initializeMapLibraries = () => {
             if (mapsLib) setMapsLib(mapsLib);
-            if (map) setMap(map);
+            if (map) {
+                setMap(map);}
             if (routesLib) {
                 setRoutesLib(routesLib);
                 initializeDirectionRender();
@@ -33,14 +34,18 @@ export const NavigationComponent = () => {
     }, [mapsLib, map, routesLib, setMapsLib, setMap, setRoutesLib,setDirectionsRenderers]);
 
     useEffect(() => {
-        if (!routesLib || !map || !mapsLib) return;
-        // navigationServiceStart();
-    }, [routesLib, map, mapsLib, setMap, destination]);
+        const startNavigationService = async () => {
+          if (!routesLib || !map || !mapsLib) return;
+          await navigationServiceStart();
+        };
+      
+        startNavigationService();
+      }, [routesLib, map, mapsLib, setMap, destination]);
 
 
 
     return <div>
-        {map && <PositionMarker></PositionMarker>}
+        {/* {map && <PositionMarker></PositionMarker>} */}
         {/* {currentDirectionsRoute && <Boardcast/>} */}
     </div>;
 };

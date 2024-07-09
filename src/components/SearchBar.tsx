@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import useStore from "../store";
+import { PositionMarker } from "./PositionMarker";
 export default function SearchBar() {
 
     const setDestination = useStore((state) => state.setDestination);
@@ -14,7 +15,7 @@ export default function SearchBar() {
     useEffect(() => {
         if (placesLibrary) {
             setService(new placesLibrary.AutocompleteService());
-        } 
+        }
 
     }, [placesLibrary]);
 
@@ -29,7 +30,7 @@ export default function SearchBar() {
         });
     };
 
-    const onInputChange = (ev: React.ChangeEvent<HTMLInputElement>)=> {
+    const onInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const value = ev.target.value;
         setInputValue(value);
         updatePredictions(value);
@@ -99,6 +100,7 @@ export default function SearchBar() {
                     Search
                 </button>
             </div>
+            <PositionMarker></PositionMarker>
         </div>
     );
 }

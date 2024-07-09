@@ -1,35 +1,45 @@
 // src/components/SpeechSynthesis.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useStore from '../store';
-import  { v1, v1beta1, TextToSpeechClient, TextToSpeechLongAudioSynthesizeClient } from '@google-cloud/text-to-speech';
+import { v1, v1beta1, TextToSpeechClient, TextToSpeechLongAudioSynthesizeClient } from '@google-cloud/text-to-speech';
 
 
 export default function Boardcast() {
-  const { currentDirectionsRoute } = useStore.getState();
-  const client = new v1.TextToSpeechClient();
+  const { currentDirectionsRoute, origin } = useStore.getState();
+  const [stepInedx, setStepIndex] = useState(0);
+  // const client = new v1.TextToSpeechClient();
 
-  const getDuration = () => {
-    const time = currentDirectionsRoute?.legs[0].duration
-    return time;
-  }
-  const textToSpeech = async () => {
-    const text = getDuration()?.text;
-    const request = {
-      input: { text: text },
-      // Select the language and SSML voice gender (optional)
-      voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' as const},
-      // select the type of audio encoding
-      // audioConfig: { audioEncoding: 'MP3' },
-    };
-    await client.synthesizeSpeech(request);
-  }
+  const extractInstructions = (text:string) => {
+    return { __html: text };
+  };
+
   useEffect(() => {
-    textToSpeech()
-
-  })
+    if (currentDirectionsRoute) {
+      console.log(currentDirectionsRoute)
+    }
+    
+  }, [currentDirectionsRoute, origin])
   return (
-    <div>SpeechSynthesis</div>
+    <div>
+      {currentDirectionsRoute && (
+        <div>
+          <p style={{ fontSize: '12px' }}>
+            BoardCast: <br />
+            Distantce: {currentDirectionsRoute!.legs[0]!.distance!.text}<br />
+            Time: {currentDirectionsRoute!.legs[0]!.duration!.text}<br />
+          </p>
+          <p style={{ fontSize: '12px' }}>
+            Current instructions:<br />
+            {currentDirectionsRoute!.legs[0].steps[stepInedx].distance?.text} <br />
+            Current street: 
+          </p>
+          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} />
+
+          
+        </div>
+      )}
+    </div>
   )
 }
 
