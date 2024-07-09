@@ -43,17 +43,18 @@ export default function Boardcast() {
       }
       setEndLocation(end_location)
     }
-    
+
     if (origin && legs) {
       console.log('Origin updated:', origin);
       if (!endLocation) {
         getEndLocation()
-      }else{
+      } else {
         const d = calculateDistance(endLocation, origin)
-        // console.log(latLngLiteralArray)
-        // if(d < 4){
-        //   alert("entering the next steps")
-        // }
+        console.log("distance from origin to current endLocation", d)
+        if (d < 10) {
+          setStepIndex(prev => prev + 1)
+          getEndLocation()
+        }
       }
     }
 

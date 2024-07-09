@@ -20,11 +20,12 @@ describe('PositionMarker Component', async () => {
 
 
     let index = -1
+    
     const nextPosition = (index: number,latLngLiteralArray ) => {
       // const { latLngLiteralArray } = useStore.getState();
       index++;
       if (index == latLngLiteralArray.length) {
-        index = 0;
+        clearInterval(intervalID)
       }
       return index
     }
@@ -36,16 +37,10 @@ describe('PositionMarker Component', async () => {
         const position = latLngLiteralArray[index]
         setOrigin(position)
         console.log(index)
-        map!.setCenter(position)
+        // map!.setCenter(position)
       }
 
     };
-
-    const intervalID = setInterval(setLocation, 1000);
-
-    // intervalID();
-    // for(let i = 0; i < geoLocation.length; i++){
-
-    // }
+    const intervalID = setInterval(setLocation, 2000);
   });
 });
