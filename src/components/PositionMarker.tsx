@@ -14,10 +14,6 @@ export const PositionMarker = () => {
             const longitude = position.coords.longitude;
             const newOrigin = { lat: latitude, lng: longitude };
             setOrigin(newOrigin);
-            // if (watchTimes === 0 && map) {
-            //     console.log("set new center")
-
-            // }
             map!.setCenter(newOrigin);
             watchTimes++;
             const endTime = new Date().getTime();
@@ -57,9 +53,7 @@ export const PositionMarker = () => {
             stopWatchingPosition();
         };
     }, [map]); // Ensure effect runs correctly with required dependencies
-    useEffect(() => {
-        console.log('Origin updated:', origin); // Log whenever origin updates
-    }, [origin]);
+  
     return (
         <h1 id="positionMarker" style={{ width: '100%' }}>
 
@@ -75,7 +69,7 @@ export const PositionMarker = () => {
                         <AdvancedMarker position={origin} />
                         <Boardcast></Boardcast>
                     </div>
-                    
+
                 )
                 : <p>
                 </p>}

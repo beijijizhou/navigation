@@ -2,41 +2,79 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import useStore from '../store';
-import { v1, v1beta1, TextToSpeechClient, TextToSpeechLongAudioSynthesizeClient } from '@google-cloud/text-to-speech';
+import { AdvancedMarker } from '@vis.gl/react-google-maps';
+import { originLocationType } from '../Type';
+import { calculateDistance } from '../utils/calculateDistance';
+
 
 
 export default function Boardcast() {
-  const { currentDirectionsRoute, origin } = useStore.getState();
+  const { currentDirectionsRoute, origin, latLngLiteralArray } = useStore.getState();
   const [stepInedx, setStepIndex] = useState(0);
+  const [legs, setLegs] = useState<google.maps.DirectionsLeg>();
+  const [endLocation, setEndLocation] = useState<originLocationType>();
   // const client = new v1.TextToSpeechClient();
 
-  const extractInstructions = (text:string) => {
+  const extractInstructions = (text: string) => {
     return { __html: text };
   };
 
   useEffect(() => {
     if (currentDirectionsRoute) {
       console.log(currentDirectionsRoute)
+      if (!legs) {
+        setLegs(currentDirectionsRoute.legs[0])
+      }
+
+
+    }
+
+  }, [currentDirectionsRoute, legs])
+
+
+
+  useEffect(() => {
+    const getEndLocation = () => {
+      const lat = legs!.steps[stepInedx].end_location.lat()
+      const lng = legs!.steps[stepInedx].end_location.lng()
+      const end_location = {
+        lat,
+        lng
+      }
+      setEndLocation(end_location)
     }
     
-  }, [currentDirectionsRoute, origin])
+    if (origin && legs) {
+      console.log('Origin updated:', origin);
+      if (!endLocation) {
+        getEndLocation()
+      }else{
+        const d = calculateDistance(endLocation, origin)
+        // console.log(latLngLiteralArray)
+        if(d < 4){
+          alert("entering the next steps")
+        }
+      }
+    }
+
+  }, [origin, endLocation, legs, stepInedx])
   return (
     <div>
-      {currentDirectionsRoute && (
+      {legs && (
         <div>
           <p style={{ fontSize: '12px' }}>
             BoardCast: <br />
-            Distantce: {currentDirectionsRoute!.legs[0]!.distance!.text}<br />
-            Time: {currentDirectionsRoute!.legs[0]!.duration!.text}<br />
+            Distantce: {legs.distance!.text}<br />
+            Time: {legs.duration!.text}<br />
           </p>
           <p style={{ fontSize: '12px' }}>
             Current instructions:<br />
-            {currentDirectionsRoute!.legs[0].steps[stepInedx].distance?.text} <br />
-            Current street: 
+            {legs.steps[stepInedx].distance?.text} <br />
+            Current street:
           </p>
           <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} />
 
-          
+          {endLocation && <AdvancedMarker position={endLocation}></AdvancedMarker>}
         </div>
       )}
     </div>

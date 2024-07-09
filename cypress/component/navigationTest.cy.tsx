@@ -42,7 +42,7 @@ describe('PositionMarker Component', async () => {
 
     };
 
-    const intervalID = setInterval(setLocation, 1000);
+    // const intervalID = setInterval(setLocation, 1000);
 
     // intervalID();
     // for(let i = 0; i < geoLocation.length; i++){
