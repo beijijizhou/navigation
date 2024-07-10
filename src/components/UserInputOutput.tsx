@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import useStore from "../store";
 import { PositionMarker } from "./PositionMarker";
-export default function SearchBar() {
+import { NavigationStatus } from "../store/useNavigationSlice";
+export default function UserInputOutput() {
 
-    const setDestination = useStore((state) => state.setDestination);
+    const { setDestination, setNavigationServiceStatus, navigationServiceStatus } = useStore.getState();
     const [inputValue, setInputValue] = useState("");
     const placesLibrary = useMapsLibrary("places");
     const [service, setService] = useState<google.maps.places.AutocompleteService | null>(null);
@@ -17,7 +18,7 @@ export default function SearchBar() {
             setService(new placesLibrary.AutocompleteService());
         }
 
-    }, [placesLibrary]);
+    }, [placesLibrary, navigationServiceStatus]);
 
     const updatePredictions = (inputValue: string) => {
         if (!service || inputValue.length === 0) {
@@ -39,6 +40,7 @@ export default function SearchBar() {
     const handleSelectedPlace = (place: google.maps.places.QueryAutocompletePrediction) => {
         setInputValue(place.description);
         setDestination(place.description)
+        setNavigationServiceStatus(NavigationStatus.InProgress);
         // console.log(place.description)
         setPredictions([]);
     };
@@ -101,7 +103,8 @@ export default function SearchBar() {
                 </button>
             </div>
             <div >
-                <PositionMarker></PositionMarker>
+            <PositionMarker></PositionMarker>
+                {/* {navigationServiceStatus == NavigationStatus.InProgress && <PositionMarker></PositionMarker>} */}
             </div>
 
         </div>

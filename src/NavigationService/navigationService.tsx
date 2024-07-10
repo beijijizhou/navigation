@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import useStore from '../store';
 import { locationType } from '../Type';
-import { plotIntersection } from './plot';
-import { getPosition } from './getPosition';
 const directionsRouteToLatLngArray = (route: google.maps.DirectionsRoute) => {
     return route.legs.flatMap(leg =>
         leg.steps.flatMap(step =>
@@ -11,7 +8,7 @@ const directionsRouteToLatLngArray = (route: google.maps.DirectionsRoute) => {
     );
 };
 
-export const getDirections = async (start: locationType, end: locationType) => {
+const getDirections = async (start: locationType, end: locationType) => {
     const { routesLib, directionsRenderers, setLatLngLiteralArray, setCurrentDirectionsRoute } = useStore.getState();
     if (!routesLib) {
         throw new Error('Routes library is not initialized.');
@@ -46,23 +43,8 @@ export const getDirections = async (start: locationType, end: locationType) => {
     });
 };
 
-export const navigationServiceStart = async () => {
-    // const { destination } = useStore.getState();
-    const start = { lat: 40.713536, lng: -74.011223 };
-    const end = { lat: 40.7284405, lng: -74.0 };
-    // await getDirections(start, end);
-    const home = { lat: 40.7898507, lng: -73.807 };
-    const destination = { lat: 40.7919567, lng: -73.8173405 }
-    if (destination && home) {
-        // console.log(home, destination)
-        await getDirections(home, destination);
-    }
-    // else {
-
-    // }
-    // await getDirections(start, end);
-
-    // await plotIntersection();
+export const navigationServiceStart = async (origin:locationType, destination:locationType) => {
+    await getDirections(origin, destination);
 };
 
 

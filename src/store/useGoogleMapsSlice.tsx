@@ -13,6 +13,7 @@ export interface GoogleMapsSlice {
   setDirectionsRenderers: (renderer: google.maps.DirectionsRenderer) => void;
   setCurrentDirectionsRoute: (route: google.maps.DirectionsRoute) => void;
   setLatLngLiteralArray: (array: google.maps.LatLngLiteral[]) => void;
+  
 }
 
 export const createGoogleMapsSlice: StateCreator<GoogleMapsSlice, [], []> = (set) => ({
@@ -30,6 +31,6 @@ export const createGoogleMapsSlice: StateCreator<GoogleMapsSlice, [], []> = (set
   setDirectionsRenderers: (renderer: google.maps.DirectionsRenderer) => set({ directionsRenderers: renderer }),
   setCurrentDirectionsRoute: (route: google.maps.DirectionsRoute) => set({ currentDirectionsRoute: route }),
   setLatLngLiteralArray: (array: google.maps.LatLngLiteral[]) => set({ latLngLiteralArray: array }),
-
+  
 });
 

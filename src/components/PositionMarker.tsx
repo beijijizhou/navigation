@@ -14,7 +14,7 @@ export const PositionMarker = () => {
             const longitude = position.coords.longitude;
             const newOrigin = { lat: latitude, lng: longitude };
             setOrigin(newOrigin);
-            map!.setCenter(newOrigin);
+            // map!.setCenter(newOrigin);
             watchTimes++;
             const endTime = new Date().getTime();
             const elapsedTime = endTime - startTime;
@@ -53,7 +53,7 @@ export const PositionMarker = () => {
             stopWatchingPosition();
         };
     }, [map]); // Ensure effect runs correctly with required dependencies
-  
+
     return (
         <h1 id="positionMarker" style={{ width: '100%' }}>
 

@@ -2,12 +2,12 @@ import React from 'react';
 import { NavigationComponent } from './components/NavigationComponent';
 import { APIProvider, Map, } from '@vis.gl/react-google-maps';
 // import { NavigationComponent } from './components/NavigationComponent';
-import SearchBar from './components/SearchBar';
+import UserInputOutput from './components/UserInputOutput';
 const start = { lat: 40.713536, lng: -74.011223 };
 // const end = { lat: 40.7484405, lng: -73.985664 };
 
 
-export const App =() => {
+export const App = () => {
 
   const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -26,7 +26,7 @@ export const App =() => {
           mapId={MAP_ID}
         />
         <NavigationComponent />
-        <SearchBar />
+        <UserInputOutput />
       </APIProvider>
     </div>
   );
