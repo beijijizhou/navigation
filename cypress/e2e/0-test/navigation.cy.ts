@@ -4,7 +4,7 @@ function mockLocation(win: Window, index: number) {
 
   cy.stub(win.navigator.geolocation, "getCurrentPosition").callsFake((success, error) => {
     const { lat: latitude, lng: longitude } = geoLocation[index];
-    console.log(latitude, longitude)
+
     if (latitude && longitude) {
       const position = {
         coords: {
@@ -29,12 +29,10 @@ describe('Mock Geo Location', () => {
 
   it("test", () => {
     cy.visit('http://localhost:5173/')
-    console.log("123")
-    console.log("ready");
     // cy.get('#positionMarker', { timeout: 1000 }).should('be.visible')
 
     cy.window().then((win) => {
-      console.log(win);
+     
     });
   });
 });

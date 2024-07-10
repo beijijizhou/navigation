@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import useStore from '../store';
-import Boardcast from './Boardcast';
+import Broadcast from './Boardcast';
 
 export const PositionMarker = () => {
     const { origin, map, setOrigin } = useStore((state) => state);
@@ -67,12 +67,11 @@ export const PositionMarker = () => {
                             Lng: {origin.lng}
                         </p>
                         <AdvancedMarker position={origin} />
-                        <Boardcast></Boardcast>
+                        <Broadcast></Broadcast>
                     </div>
 
                 )
-                : <p>
-                </p>}
+                : <p>Your destination has arrived</p>}
         </h1>
     );
 };

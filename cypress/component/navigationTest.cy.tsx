@@ -6,6 +6,7 @@ import React from 'react';
 import { mount } from 'cypress/react18'
 import { App } from "../../src/App"
 import useStore from '../../src/store';
+import { NavigationStatus } from '../../src/store/useNavigationSlice';
 
 
 describe('PositionMarker Component', async () => {
@@ -15,13 +16,13 @@ describe('PositionMarker Component', async () => {
 
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
-
-    
+    const { setNavigationServiceStatus} = useStore.getState();
+    setNavigationServiceStatus(NavigationStatus.InProgress)
 
 
     let index = -1
     
-    const nextPosition = (index: number,latLngLiteralArray ) => {
+    const nextPosition = (index: number,latLngLiteralArray: google.maps.LatLngLiteral[]) => {
       // const { latLngLiteralArray } = useStore.getState();
       index++;
       if (index == latLngLiteralArray.length) {

@@ -8,7 +8,7 @@ import { calculateDistance } from '../utils/calculateDistance';
 import { NavigationStatus } from '../store/useNavigationSlice';
 
 
-export default function Boardcast() {
+export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus } = useStore.getState();
   const [stepInedx, setStepIndex] = useState(0);
   const [legs, setLegs] = useState<google.maps.DirectionsLeg>();
@@ -20,26 +20,15 @@ export default function Boardcast() {
     return { __html: text };
   };
 
+
+
+
+
   useEffect(() => {
-    if (currentDirectionsRoute) {
-      console.log(currentDirectionsRoute)
-      if (!legs) {
-        setLegs(currentDirectionsRoute.legs[0])
-      } 
+    const navigationServiceEnds = () => {
+      setNavigationServiceStatus(NavigationStatus.Completed);
+      
     }
-
-  }, [currentDirectionsRoute, legs])
-
-  useEffect(() =>{
-    
-  },[navigationServiceStatus])
-
-  const navigationServiceEnds =()=>{
-    setNavigationServiceStatus(NavigationStatus.Completed);
-    
-  }
- 
-  useEffect(() => {
     const getEndLocation = () => {
       const lat = legs!.steps[stepInedx].end_location.lat()
       const lng = legs!.steps[stepInedx].end_location.lng()
@@ -49,25 +38,36 @@ export default function Boardcast() {
       }
       setEndLocation(end_location)
     }
+    const navigationServiceInProgress = () => {
+      const d = calculateDistance(endLocation!, origin!)
+      console.log("distance", d)
+      if (d < 10) {
+        console.log(stepInedx, legs!.steps.length)
+        if (stepInedx == legs!.steps.length - 1) {
+          navigationServiceEnds()
 
-    if (origin && legs) {
-      console.log('Origin updated:', origin);
-      if (!endLocation) {
-        getEndLocation()
-      } else {
-        const d = calculateDistance(endLocation, origin)
-        console.log("distance from origin to current endLocation", d)
-        if (d < 10) {
-          if(stepInedx == legs.steps.length){
-            navigationServiceEnds()
-          }
+        }
+        else {
           setStepIndex(prev => prev + 1)
           getEndLocation()
         }
+
       }
     }
 
-  }, [origin, endLocation, legs, stepInedx])
+    if (!currentDirectionsRoute) return
+    if (!legs) {
+      setLegs(currentDirectionsRoute.legs[0])
+      return
+    }
+    if (!endLocation) {
+      getEndLocation()
+      return
+    }
+    if (navigationServiceStatus == NavigationStatus.InProgress) {
+      navigationServiceInProgress()
+    }
+  }, [currentDirectionsRoute, origin, endLocation, legs, stepInedx, setNavigationServiceStatus, navigationServiceStatus])
   return (
     <div>
       {legs && (
@@ -83,8 +83,9 @@ export default function Boardcast() {
             Current street:
           </p>
           <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} />
-          <p></p>
+
           {endLocation && <AdvancedMarker position={endLocation}></AdvancedMarker>}
+          {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
         </div>
       )}
     </div>

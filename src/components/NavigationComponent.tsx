@@ -41,6 +41,7 @@ export const NavigationComponent = () => {
             const neighbor = { lat: 40.7919567, lng: -73.8173405 }
 
             await navigationServiceStart(home, crossStreet);
+            
             // if (navigationServiceStatus == NavigationStatus.InProgress) {
             //     await navigationServiceStart(home, destination);
             // }

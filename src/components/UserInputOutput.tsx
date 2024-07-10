@@ -41,17 +41,14 @@ export default function UserInputOutput() {
         setInputValue(place.description);
         setDestination(place.description)
         setNavigationServiceStatus(NavigationStatus.InProgress);
-        // console.log(place.description)
         setPredictions([]);
     };
 
     const handleMouseEnter = (index: number) => {
-        console.log("mouse enter");
         setHoveredIndex(index);
     };
 
     const handleMouseLeave = () => {
-        console.log("mouse leave");
         setHoveredIndex(-1);
     };
 

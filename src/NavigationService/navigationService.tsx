@@ -27,8 +27,8 @@ const getDirections = async (start: locationType, end: locationType) => {
                 if (result) {
                     directionsRenderers!.setDirections(result);
                     setCurrentDirectionsRoute(result.routes[0]);
+                    console.log(result.routes[0])
                     const latLngArray = directionsRouteToLatLngArray(result.routes[0]);
-                    // console.log(latLngArray)
                     setLatLngLiteralArray(latLngArray);
                     resolve();
                 } else {
