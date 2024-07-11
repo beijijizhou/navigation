@@ -4,11 +4,12 @@ import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import { navigationServiceStart } from '../NavigationService/navigationService';
 import { NavigationStatus } from '../store/useNavigationSlice';
+import { getPosition } from '../NavigationService/getPosition';
 export const NavigationComponent = () => {
     const routesLib = useMapsLibrary('routes');
     const map = useMap();
     const mapsLib = useMapsLibrary('maps');
-    const { destination, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers, navigationServiceStatus } = useStore();
+    const { origin, destination, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers, navigationServiceStatus } = useStore();
     useEffect(() => {
         const initializeMapLibraries = () => {
             if (mapsLib) setMapsLib(mapsLib);
@@ -33,23 +34,29 @@ export const NavigationComponent = () => {
     useEffect(() => {
         const startNavigationService = async () => {
             if (!routesLib || !map || !mapsLib) return;
+            if(!origin){
+                getPosition();
+                return 
+            }
             const bmcc = { lat: 40.713536, lng: -74.011223 };
             const goldenDinner = { lat: 40.7284405, lng: -74.0 };
             // await getDirections(start, end);
             const home = {lat: 40.7898531, lng: -73.8078768}
             const crossStreet = { lat: 40.7898507, lng: -73.807 };
             const neighbor = { lat: 40.7919567, lng: -73.8173405 }
-
-            await navigationServiceStart(home, neighbor);
-            
-            // if (navigationServiceStatus == NavigationStatus.InProgress) {
-            //     await navigationServiceStart(home, destination);
+            // if(!destination){
+            //     await navigationServiceStart(home, neighbor);
             // }
-
+            // else{
+                
+            //     await navigationServiceStart(origin,destination);
+            // }
+            if(destination)
+            await navigationServiceStart(origin,destination);
         };
 
         startNavigationService();
-    }, [routesLib, map, mapsLib, setMap, destination, navigationServiceStatus]);
+    }, [routesLib, map, mapsLib, setMap, origin, destination, navigationServiceStatus]);
 
 
 
