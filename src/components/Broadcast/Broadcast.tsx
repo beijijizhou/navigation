@@ -1,11 +1,11 @@
 // src/components/SpeechSynthesis.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
-import useStore from '../store';
+import useStore from '../../store';
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
-import { originLocationType } from '../Type';
-import { calculateDistance } from '../utils/calculateDistance';
-import { NavigationStatus } from '../store/useNavigationSlice';
+import { originLocationType } from '../../Type';
+import { calculateDistance } from '../../utils/calculateDistance';
+import { NavigationStatus } from '../../store/useNavigationSlice';
 
 
 export default function Broadcast() {
@@ -27,7 +27,7 @@ export default function Broadcast() {
   useEffect(() => {
     const navigationServiceEnds = () => {
       setNavigationServiceStatus(NavigationStatus.Completed);
-      
+
     }
     const getEndLocation = () => {
       const lat = legs!.steps[stepInedx].end_location.lat()
@@ -41,7 +41,7 @@ export default function Broadcast() {
     const navigationServiceInProgress = () => {
       const d = calculateDistance(endLocation!, origin!)
       console.log("distance", d)
-      if (d < 10) {
+      if (d < 5) {
         console.log(stepInedx, legs!.steps.length)
         if (stepInedx == legs!.steps.length - 1) {
           navigationServiceEnds()
@@ -79,11 +79,15 @@ export default function Broadcast() {
           </p>
           <p style={{ fontSize: '12px' }}>
             Current instructions:<br />
-            {legs.steps[stepInedx].distance?.text} <br />
-            Current street:
+            
+           
           </p>
-          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} />
-
+          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} >
+          
+          </p>
+          <p>
+          {legs.steps[stepInedx].distance?.text} <br />
+          </p>
           {endLocation && <AdvancedMarker position={endLocation}></AdvancedMarker>}
           {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
         </div>

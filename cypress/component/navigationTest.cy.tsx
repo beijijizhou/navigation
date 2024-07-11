@@ -23,16 +23,15 @@ describe('PositionMarker Component', async () => {
     let index = -1
     
     const nextPosition = (index: number,latLngLiteralArray: google.maps.LatLngLiteral[]) => {
-      // const { latLngLiteralArray } = useStore.getState();
       index++;
       if (index == latLngLiteralArray.length) {
         clearInterval(intervalID)
+        index = 0
       }
       return index
     }
     const setLocation = () => {
       const { setOrigin, map,latLngLiteralArray } = useStore.getState();
-      // console.log(map)
       if (map && latLngLiteralArray) {
         index = nextPosition(index, latLngLiteralArray);
         const position = latLngLiteralArray[index]
