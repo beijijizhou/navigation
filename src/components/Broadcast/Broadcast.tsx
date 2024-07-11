@@ -79,11 +79,15 @@ export default function Broadcast() {
           </p>
           <p style={{ fontSize: '12px' }}>
             Current instructions:<br />
-            {legs.steps[stepInedx].distance?.text} <br />
-            Current street:
+            
+           
           </p>
-          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} />
-
+          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} >
+          
+          </p>
+          <p>
+          {legs.steps[stepInedx].distance?.text} <br />
+          </p>
           {endLocation && <AdvancedMarker position={endLocation}></AdvancedMarker>}
           {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
         </div>
