@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import /*React,*/ { useEffect, useState } from 'react';
-import { AdvancedMarker, useMapsLibrary } from '@vis.gl/react-google-maps';
+import { AdvancedMarker} from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
 
