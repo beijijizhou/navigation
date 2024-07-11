@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import { navigationServiceStart } from '../NavigationService/navigationService';
+import { getPosition } from '../NavigationService/getPosition';
 // import { NavigationStatus } from '../store/useNavigationSlice';
 export const NavigationComponent = () => {
     const routesLib = useMapsLibrary('routes');
