@@ -1,13 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import /*React,*/ { useEffect, useState } from 'react';
-import { AdvancedMarker } from '@vis.gl/react-google-maps';
+import { AdvancedMarker, useMapsLibrary } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
 
 export const PositionMarker = () => {
     const { origin, map, setOrigin } = useStore((state) => state);
+
     const [watchId, setWatchId] = useState<number | null>(null);
     let watchTimes = 0
     const startTime = new Date().getTime();
+    const beachFlagImg = document.createElement("img");
+    // console.log(AdvancedMarkerElement)
+    beachFlagImg.src =
+        "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
+    useEffect(()=>{
+
+    },[origin])
     useEffect(() => {
         const successCallback = (position: GeolocationPosition) => {
             const latitude = position.coords.latitude;
@@ -34,7 +45,7 @@ export const PositionMarker = () => {
             }
 
             const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
-                maximumAge: 6000, timeout: 2000, enableHighAccuracy: true
+                maximumAge: 100, timeout: 100, enableHighAccuracy: true
             });
 
             setWatchId(id);

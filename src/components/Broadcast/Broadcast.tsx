@@ -85,7 +85,7 @@ export default function Broadcast() {
           <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} >
           
           </p>
-          <p>
+          <p style={{ fontSize: '12px' }} >
           {legs.steps[stepInedx].distance?.text} <br />
           </p>
           {endLocation && <AdvancedMarker position={endLocation}></AdvancedMarker>}
