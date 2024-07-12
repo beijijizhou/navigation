@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import /*React,*/ { useEffect, useState } from 'react';
-import { AdvancedMarker} from '@vis.gl/react-google-maps';
+import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
 
@@ -16,9 +16,9 @@ export const PositionMarker = () => {
     beachFlagImg.src =
         "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
-    useEffect(()=>{
+    useEffect(() => {
 
-    },[origin])
+    }, [origin])
     useEffect(() => {
         const successCallback = (position: GeolocationPosition) => {
             const latitude = position.coords.latitude;
@@ -77,7 +77,13 @@ export const PositionMarker = () => {
                             Lat: {origin.lat}<br />
                             Lng: {origin.lng}
                         </p>
-                        <AdvancedMarker position={origin} />
+                        <AdvancedMarker position={origin} >
+                            <Pin
+                                background={'#0f9d58'}
+                                borderColor={'#006425'}
+                                glyphColor={'#60d98f'}
+                            />
+                        </AdvancedMarker>
                         <Broadcast></Broadcast>
                     </div>
 
