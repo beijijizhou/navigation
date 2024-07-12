@@ -2,11 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import useStore from '../../store';
-import { AdvancedMarker } from '@vis.gl/react-google-maps';
+import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { originLocationType } from '../../Type';
 import { calculateDistance } from '../../utils/calculateDistance';
 import { NavigationStatus } from '../../store/useNavigationSlice';
-
 
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus } = useStore.getState();
@@ -14,7 +13,7 @@ export default function Broadcast() {
   const [legs, setLegs] = useState<google.maps.DirectionsLeg>();
   const [endLocation, setEndLocation] = useState<originLocationType>();
   const endService = "Your Destination Has arrrived"
-  // const client = new v1.TextToSpeechClient();
+ // const client = new v1.TextToSpeechClient();
 
   const extractInstructions = (text: string) => {
     return { __html: text };
@@ -79,16 +78,23 @@ export default function Broadcast() {
           </p>
           <p style={{ fontSize: '12px' }}>
             Current instructions:<br />
-            
-           
+
+
           </p>
           <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} >
-          
+
           </p>
           <p style={{ fontSize: '12px' }} >
-          {legs.steps[stepInedx].distance?.text} <br />
+            {legs.steps[stepInedx].distance?.text} <br />
           </p>
-          {endLocation && <AdvancedMarker position={endLocation}></AdvancedMarker>}
+          {endLocation && <AdvancedMarker position={endLocation}>
+          {/* <img src={destinationFlagURL} width={32} height={32} /> */}
+          <Pin
+                                background={'#000000'}
+                                borderColor={'#006425'}
+                                glyphColor={'#60d98f'}
+                            />
+          </AdvancedMarker>}
           {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
         </div>
       )}

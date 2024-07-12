@@ -4,7 +4,7 @@ import /*React,*/ { useEffect, useState } from 'react';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
-
+import { originURL } from '../assets/icon';
 export const PositionMarker = () => {
     const { origin, map, setOrigin } = useStore((state) => state);
 
@@ -78,6 +78,7 @@ export const PositionMarker = () => {
                             Lng: {origin.lng}
                         </p>
                         <AdvancedMarker position={origin} >
+                            <img src={originURL} width={32} height={32} />
                             <Pin
                                 background={'#0f9d58'}
                                 borderColor={'#006425'}
