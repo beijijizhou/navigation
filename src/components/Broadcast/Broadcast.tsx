@@ -1,11 +1,12 @@
 // src/components/SpeechSynthesis.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { originLocationType } from '../../Type';
 import { calculateDistance } from '../../utils/calculateDistance';
 import { NavigationStatus } from '../../store/useNavigationSlice';
+import useSpeech from '../../utils/txtToSpeech.tsx'
 
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus } = useStore.getState();
@@ -13,15 +14,13 @@ export default function Broadcast() {
   const [legs, setLegs] = useState<google.maps.DirectionsLeg>();
   const [endLocation, setEndLocation] = useState<originLocationType>();
   const endService = "Your Destination Has arrrived"
- // const client = new v1.TextToSpeechClient();
 
   const extractInstructions = (text: string) => {
     return { __html: text };
   };
-
-
-
-
+  const removeHTML = (text: string) => {
+    return text.replace(/(<([^>]+)>)/ig, '')
+  };
 
   useEffect(() => {
     const navigationServiceEnds = () => {
@@ -57,7 +56,7 @@ export default function Broadcast() {
     if (!currentDirectionsRoute) return
     if (!legs) {
       setLegs(currentDirectionsRoute.legs[0])
-      return
+      return  
     }
     if (!endLocation) {
       getEndLocation()
@@ -67,6 +66,20 @@ export default function Broadcast() {
       navigationServiceInProgress()
     }
   }, [currentDirectionsRoute, origin, endLocation, legs, stepInedx, setNavigationServiceStatus, navigationServiceStatus])
+
+  const prevInstructions = useRef('')
+
+  useEffect(() => {
+    if (currentDirectionsRoute) {
+      let instructions = removeHTML(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)
+      if (prevInstructions.current !== instructions) {
+        useSpeech(instructions)
+      }
+      prevInstructions.current = instructions
+    }
+  }, [currentDirectionsRoute])
+
+  
   return (
     <div>
       {legs && (
