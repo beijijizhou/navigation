@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as turf from "@turf/turf";
 function convertMetersToFeet(meters: number): number {
   const feetPerMeter = 3280.84;
@@ -12,15 +13,58 @@ export const calculateDistanceToCurrentEndLocation = (endLocation: google.maps.L
   const currentPoint = turf.point([origin.lng, origin.lat]);
   const endPoint = turf.point([endLocation.lng, endLocation.lat]);
   const d = turf.distance(currentPoint, endPoint)
-
   return convertMetersToFeet(d)
 }
-export const calculateDuration = (stepIndex: number, leg: google.maps.DirectionsLeg) => {
-  // let duration = 0
-  for (let i = stepIndex; i < leg.steps.length; i++) {
-    console.log(leg.steps[stepIndex].duration?.text);
-  }
-}
-// export const timeTable(stepIndex: number){
 
-// }
+
+export const calculateDurationToCurrentEndLocation = (distanceInFeet: number): number => {
+  const feetPerMile = 5280;
+  const averageWalkingSpeedMph = 3.1; // average walking speed in miles per hour
+
+  // Convert distance to miles
+  const distanceInMiles = distanceInFeet / feetPerMile;
+
+  // Calculate time in hours
+  const timeInHours = distanceInMiles / averageWalkingSpeedMph;
+
+  // Convert time to seconds
+  const timeInSeconds = timeInHours * 3600;
+
+  return Math.round(timeInSeconds);
+};
+
+export const calculateRemainingTime = (stepIndex:number,RemainingTimeToEndLocation:number, durationTable:Array<number>) =>{
+  if (stepIndex == durationTable.length - 1){
+    return RemainingTimeToEndLocation
+  }
+  console.log()
+  return durationTable[stepIndex + 1] + RemainingTimeToEndLocation
+}
+export const createDurationTableInSecs = (leg: google.maps.DirectionsLeg) => {
+  let duration = 0;
+  const len = leg.steps.length;
+  const durationTable = new Array<number>(len);
+
+  for (let i = 0; i < len; i++) {
+    duration += leg.steps[i].duration!.value; 
+    durationTable[i] = duration
+  }
+  return durationTable.reverse();
+};
+export const convertTime = (duration: number): string => {
+  const durationInMinutes = Math.ceil(duration / 60); // convert to minutes
+  let formattedTime = "";
+
+  // Format duration as "X mins" or "Y hrs Z mins"
+  if (durationInMinutes < 60) {
+    formattedTime = `${durationInMinutes} ${durationInMinutes === 1 ? 'min' : 'mins'}`;
+  } else {
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = durationInMinutes % 60;
+    const hourString = `${hours} ${hours === 1 ? 'hr' : 'hrs'}`;
+    const minuteString = minutes > 0 ? ` ${minutes} ${minutes === 1 ? 'min' : 'mins'}` : '';
+    formattedTime = `${hourString}${minuteString}`;
+  }
+
+  return formattedTime;
+};

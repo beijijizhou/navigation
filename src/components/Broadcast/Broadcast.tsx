@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
-import { calculateDistanceToCurrentEndLocation, calculateDuration, calculateDurationInMinutes } from '../../utils/broadCastUtil/calculation.tsx';
+import { calculateDistanceToCurrentEndLocation,calculateDurationToCurrentEndLocation ,} from '../../utils/broadCastUtil/calculation.tsx';
 import { NavigationStatus } from '../../store/useNavigationSlice';
 import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, setStepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
-  const {distanceToCurrentEndLocation} = useStore.getState();
+  const {distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
   const extractInstructions = (text: string) => {
@@ -35,7 +35,7 @@ export default function Broadcast() {
     const navigationServiceInProgress = () => {
       const d = calculateDistanceToCurrentEndLocation(endLocation!, origin!)
       // console.log("distance", d)
-      console.log("duration", calculateDurationInMinutes(d))
+      // console.log("duration", calculateDurationInMinutes(d))
       if (d < 5) {
         // console.log(stepIndex, legs!.steps.length)
         if (stepIndex == legs!.steps.length - 1) {
@@ -53,7 +53,7 @@ export default function Broadcast() {
       setLegs(currentDirectionsRoute.legs[0])
       return
     }
-    calculateDuration(stepIndex, legs);
+    
     if (!endLocation) {
       getEndLocation()
       return
@@ -83,7 +83,7 @@ export default function Broadcast() {
           <p style={{ fontSize: '12px' }}>
             BoardCast: <br />
             Distantce: {legs.distance!.text}<br />
-            Time: {legs.duration!.text}<br />
+            Time: {remainingTime}<br />
           </p>
           <p style={{ fontSize: '12px' }}>
             Current instructions:<br />
