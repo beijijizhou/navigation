@@ -3,16 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
-import { originLocationType } from '../../Type';
-import { calculateDistance } from '../../utils/calculateDistance';
+import { calculateDistanceToCurrentEndLocation, calculateDuration, calculateDurationInMinutes } from '../../utils/broadCastUtil/calculation.tsx';
 import { NavigationStatus } from '../../store/useNavigationSlice';
 import useSpeech from '../../utils/txtToSpeech.tsx'
-
 export default function Broadcast() {
-  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus } = useStore.getState();
-  const [stepInedx, setStepIndex] = useState(0);
-  const [legs, setLegs] = useState<google.maps.DirectionsLeg>();
-  const [endLocation, setEndLocation] = useState<originLocationType>();
+  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, setStepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
+  const {distanceToCurrentEndLocation} = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
   const extractInstructions = (text: string) => {
@@ -28,8 +24,8 @@ export default function Broadcast() {
 
     }
     const getEndLocation = () => {
-      const lat = legs!.steps[stepInedx].end_location.lat()
-      const lng = legs!.steps[stepInedx].end_location.lng()
+      const lat = legs!.steps[stepIndex].end_location.lat()
+      const lng = legs!.steps[stepIndex].end_location.lng()
       const end_location = {
         lat,
         lng
@@ -37,27 +33,27 @@ export default function Broadcast() {
       setEndLocation(end_location)
     }
     const navigationServiceInProgress = () => {
-      const d = calculateDistance(endLocation!, origin!)
-      console.log("distance", d)
+      const d = calculateDistanceToCurrentEndLocation(endLocation!, origin!)
+      // console.log("distance", d)
+      console.log("duration", calculateDurationInMinutes(d))
       if (d < 5) {
-        console.log(stepInedx, legs!.steps.length)
-        if (stepInedx == legs!.steps.length - 1) {
+        // console.log(stepIndex, legs!.steps.length)
+        if (stepIndex == legs!.steps.length - 1) {
           navigationServiceEnds()
-
         }
         else {
-          setStepIndex(prev => prev + 1)
+          setStepIndex(stepIndex + 1)
           getEndLocation()
         }
-
       }
     }
 
     if (!currentDirectionsRoute) return
     if (!legs) {
       setLegs(currentDirectionsRoute.legs[0])
-      return  
+      return
     }
+    calculateDuration(stepIndex, legs);
     if (!endLocation) {
       getEndLocation()
       return
@@ -65,21 +61,21 @@ export default function Broadcast() {
     if (navigationServiceStatus == NavigationStatus.InProgress) {
       navigationServiceInProgress()
     }
-  }, [currentDirectionsRoute, origin, endLocation, legs, stepInedx, setNavigationServiceStatus, navigationServiceStatus])
+  }, [currentDirectionsRoute, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus])
 
   const prevInstructions = useRef('')
 
   useEffect(() => {
     if (currentDirectionsRoute) {
-      let instructions = removeHTML(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)
+      const instructions = removeHTML(currentDirectionsRoute!.legs[0].steps[stepIndex].instructions)
       if (prevInstructions.current !== instructions) {
-        useSpeech(instructions)
+        // useSpeech(instructions)
       }
       prevInstructions.current = instructions
     }
   }, [currentDirectionsRoute])
 
-  
+
   return (
     <div>
       {legs && (
@@ -91,22 +87,20 @@ export default function Broadcast() {
           </p>
           <p style={{ fontSize: '12px' }}>
             Current instructions:<br />
-
-
           </p>
-          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepInedx].instructions)} >
+          <p style={{ fontSize: '12px' }} dangerouslySetInnerHTML={extractInstructions(currentDirectionsRoute!.legs[0].steps[stepIndex].instructions)} >
 
           </p>
           <p style={{ fontSize: '12px' }} >
-            {legs.steps[stepInedx].distance?.text} <br />
+            {distanceToCurrentEndLocation} feet <br />
           </p>
           {endLocation && <AdvancedMarker position={endLocation}>
-          {/* <img src={destinationFlagURL} width={32} height={32} /> */}
-          <Pin
-                                background={'#000000'}
-                                borderColor={'#006425'}
-                                glyphColor={'#60d98f'}
-                            />
+            {/* <img src={destinationFlagURL} width={32} height={32} /> */}
+            <Pin
+              background={'#000000'}
+              borderColor={'#006425'}
+              glyphColor={'#60d98f'}
+            />
           </AdvancedMarker>}
           {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
         </div>

@@ -40,17 +40,17 @@ export const NavigationComponent = () => {
             const bmcc = { lat: 40.713536, lng: -74.011223 };
             const goldenDinner = { lat: 40.7284405, lng: -74.0 };
             // await getDirections(start, end);
-            // const home = {lat: 40.7898531, lng: -73.8078768}
+            const home = {lat: 40.7898531, lng: -73.8078768}
             // const crossStreet = { lat: 40.7898507, lng: -73.807 };
-            // const neighbor = { lat: 40.7919567, lng: -73.8173405 }
+            const neighbor = { lat: 40.7919567, lng: -73.8173405 }
 
-            await navigationServiceStart(bmcc, goldenDinner);
+            await navigationServiceStart(home, neighbor);
             
             // if (navigationServiceStatus == NavigationStatus.InProgress) {
             //     await navigationServiceStart(home, destination);
             // }
-            if(destination)
-            await navigationServiceStart(origin,destination);
+            // if(destination)
+            // await navigationServiceStart(origin,destination);
         };
 
         startNavigationService();
