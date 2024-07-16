@@ -1,13 +1,12 @@
 // src/components/SpeechSynthesis.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
-import { calculateDistanceToCurrentEndLocation, calculateDurationToCurrentEndLocation, } from '../../utils/navigationUtil/navigation.tsx';
 import { NavigationStatus } from '../../store/useNavigationSlice';
-import useSpeech from '../../utils/txtToSpeech.tsx'
+// import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
-  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, setStepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
+  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, legs, setLegs, currentEndLocation: endLocation, } = useStore.getState();
   const { distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
@@ -20,30 +19,7 @@ export default function Broadcast() {
 
   useEffect(() => {
 
-    const getEndLocation = () => {
-      const lat = legs!.steps[stepIndex].end_location.lat()
-      const lng = legs!.steps[stepIndex].end_location.lng()
-      const end_location = {
-        lat,
-        lng
-      }
-      setEndLocation(end_location)
-    }
-    const navigationServiceInProgress = () => {
-      const d = calculateDistanceToCurrentEndLocation(endLocation!, origin!)
-      // console.log("distance", d)
-      // console.log("duration", calculateDurationInMinutes(d))
-      // if (d < 5) {
-      //   // console.log(stepIndex, legs!.steps.length)
-      //   if (stepIndex == legs!.steps.length - 1) {
-      //     navigationServiceEnds()
-      //   }
-      //   else {
-      //     setStepIndex(stepIndex + 1)
-      //     getEndLocation()
-      //   }
-      // }
-    }
+
 
     if (!currentDirectionsRoute) return
     if (!legs) {
@@ -51,13 +27,6 @@ export default function Broadcast() {
       return
     }
 
-    if (!endLocation) {
-      getEndLocation()
-      return
-    }
-    if (navigationServiceStatus == NavigationStatus.InProgress) {
-      navigationServiceInProgress()
-    }
   }, [currentDirectionsRoute, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus])
 
   const prevInstructions = useRef('')
@@ -70,7 +39,7 @@ export default function Broadcast() {
       }
       prevInstructions.current = instructions
     }
-  }, [currentDirectionsRoute])
+  }, [currentDirectionsRoute, stepIndex])
 
 
   return (
