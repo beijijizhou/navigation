@@ -14,7 +14,7 @@ export const App = () => {
   const { origin } = useStore();
   useEffect(() => {
     if (!origin) {
-      alert("Please allow us to access your current location")
+      // alert("Please allow us to access your current location")
       getPosition();
     }
     

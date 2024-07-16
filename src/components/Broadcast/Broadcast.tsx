@@ -1,12 +1,13 @@
 // src/components/SpeechSynthesis.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef} from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { NavigationStatus } from '../../store/useNavigationSlice';
+import { getEndLocation } from '../../utils/navigationUtil/navigation';
 // import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
-  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
+  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex,legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
   const { distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
@@ -18,30 +19,17 @@ export default function Broadcast() {
   };
 
   useEffect(() => {
-
-    const getEndLocation = () => {
-      const lat = legs!.steps[stepIndex].end_location.lat()
-      const lng = legs!.steps[stepIndex].end_location.lng()
-      const end_location = {
-        lat,
-        lng
-      }
-      setEndLocation(end_location)
-    }
-
-
     if (!currentDirectionsRoute) return
     if (!legs) {
       setLegs(currentDirectionsRoute.legs[0])
       return
     }
-
     if (!endLocation) {
-      getEndLocation()
+      setEndLocation(getEndLocation(legs,stepIndex))
       return
     }
-   
-  }, [currentDirectionsRoute, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus,setLegs, setEndLocation])
+    
+  }, [currentDirectionsRoute, setEndLocation,setLegs,origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus])
 
   const prevInstructions = useRef('')
 

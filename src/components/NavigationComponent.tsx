@@ -37,16 +37,12 @@ export const NavigationComponent = () => {
                 map.setCenter(origin!);
                 map.setZoom(13)
             }
-            // console.log("startNavigationService",destination)
-            // console.log("startNavigationService",origin)
-            console.log(navigationServiceStatus )
             if (origin && destination) {
-                if (navigationServiceStatus == NavigationStatus.NotStarted) {
-                    setNavigationServiceStatus(NavigationStatus.InProgress)
+                console.log(navigationServiceStatus == NavigationStatus.NotStarted)
+                if (navigationServiceStatus == NavigationStatus.NotStarted) {                    
                     await navigationServiceStart(origin, destination);
-                    console.log("startNavigationService")
+                    setNavigationServiceStatus(NavigationStatus.InProgress)
                 }
-
             }
         };
         startNavigationService();

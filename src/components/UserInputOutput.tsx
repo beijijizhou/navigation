@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import useStore from "../store";
 import { PositionMarker } from "./PositionMarker";
-import { NavigationStatus } from "../store/useNavigationSlice";
 export default function UserInputOutput() {
   const {
     setDestination,
-    setNavigationServiceStatus,
     navigationServiceStatus,
   } = useStore.getState();
   const [inputValue, setInputValue] = useState("");
@@ -51,7 +49,6 @@ export default function UserInputOutput() {
   ) => {
     setInputValue(place.description);
     setDestination(place.description);
-    setNavigationServiceStatus(NavigationStatus.InProgress);
     setPredictions([]);
   };
 
