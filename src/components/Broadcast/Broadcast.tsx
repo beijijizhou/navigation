@@ -5,7 +5,7 @@ import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { NavigationStatus } from '../../store/useNavigationSlice';
 import { getEndLocation } from '../../utils/navigationUtil/navigation';
-// import useSpeech from '../../utils/txtToSpeech.tsx'
+import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex,legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
   const { distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
@@ -37,7 +37,7 @@ export default function Broadcast() {
     if (currentDirectionsRoute) {
       const instructions = removeHTML(currentDirectionsRoute!.legs[0].steps[stepIndex].instructions)
       if (prevInstructions.current !== instructions) {
-        // useSpeech(instructions)
+        useSpeech(instructions)
       }
       prevInstructions.current = instructions
     }
