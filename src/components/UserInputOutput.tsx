@@ -11,11 +11,8 @@ export default function UserInputOutput() {
   } = useStore.getState();
   const [inputValue, setInputValue] = useState("");
   const placesLibrary = useMapsLibrary("places");
-  const [service, setService] =
-    useState<google.maps.places.AutocompleteService | null>(null);
-  const [predictions, setPredictions] = useState<
-    Array<google.maps.places.QueryAutocompletePrediction> | []
-  >([]);
+  const [service, setService] = useState<google.maps.places.AutocompleteService | null>(null);
+  const [predictions, setPredictions] = useState<Array<google.maps.places.QueryAutocompletePrediction> | []>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number>(0);
 
   useEffect(() => {
@@ -69,7 +66,7 @@ export default function UserInputOutput() {
   if (!service) return null;
 
   return (
-    <div className="searchBar" style={{maxWidth: '200px' , margin: "10px", position: "relative" }}>
+    <div className="searchBar" style={{ maxWidth: '200px', margin: "10px", position: "relative" }}>
       <h4>Search By Name</h4>
       <div style={{ marginBottom: "10px" }}>
         <input

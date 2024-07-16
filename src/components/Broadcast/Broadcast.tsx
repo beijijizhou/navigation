@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
-import { calculateDistanceToCurrentEndLocation,calculateDurationToCurrentEndLocation ,} from '../../utils/broadCastUtil/calculation.tsx';
+import { calculateDistanceToCurrentEndLocation, calculateDurationToCurrentEndLocation, } from '../../utils/navigationUtil/navigation.tsx';
 import { NavigationStatus } from '../../store/useNavigationSlice';
 import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, setStepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
-  const {distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
+  const { distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
   const extractInstructions = (text: string) => {
@@ -19,10 +19,7 @@ export default function Broadcast() {
   };
 
   useEffect(() => {
-    const navigationServiceEnds = () => {
-      setNavigationServiceStatus(NavigationStatus.Completed);
 
-    }
     const getEndLocation = () => {
       const lat = legs!.steps[stepIndex].end_location.lat()
       const lng = legs!.steps[stepIndex].end_location.lng()
@@ -36,16 +33,16 @@ export default function Broadcast() {
       const d = calculateDistanceToCurrentEndLocation(endLocation!, origin!)
       // console.log("distance", d)
       // console.log("duration", calculateDurationInMinutes(d))
-      if (d < 5) {
-        // console.log(stepIndex, legs!.steps.length)
-        if (stepIndex == legs!.steps.length - 1) {
-          navigationServiceEnds()
-        }
-        else {
-          setStepIndex(stepIndex + 1)
-          getEndLocation()
-        }
-      }
+      // if (d < 5) {
+      //   // console.log(stepIndex, legs!.steps.length)
+      //   if (stepIndex == legs!.steps.length - 1) {
+      //     navigationServiceEnds()
+      //   }
+      //   else {
+      //     setStepIndex(stepIndex + 1)
+      //     getEndLocation()
+      //   }
+      // }
     }
 
     if (!currentDirectionsRoute) return
@@ -53,7 +50,7 @@ export default function Broadcast() {
       setLegs(currentDirectionsRoute.legs[0])
       return
     }
-    
+
     if (!endLocation) {
       getEndLocation()
       return

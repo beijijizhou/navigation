@@ -7,7 +7,12 @@ import { mount } from 'cypress/react18'
 import { App } from "../../src/App"
 import useStore from '../../src/store';
 import { NavigationStatus } from '../../src/store/useNavigationSlice';
-
+const bmcc = { lat: 40.713536, lng: -74.011223 };
+const goldenDinner = { lat: 40.7284405, lng: -74.0 };
+// await getDirections(start, end);
+const home = {lat: 40.7898531, lng: -73.8078768}
+// const crossStreet = { lat: 40.7898507, lng: -73.807 };
+const neighbor = { lat: 40.7919567, lng: -73.8173405 }
 
 describe('PositionMarker Component', async () => {
 
@@ -36,7 +41,7 @@ describe('PositionMarker Component', async () => {
         index = nextPosition(index, latLngLiteralArray);
         const position = latLngLiteralArray[index]
         setOrigin(position)
-        console.log(index)
+        // console.log(index)
         // map!.setCenter(position)
       }
 

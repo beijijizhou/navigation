@@ -1,7 +1,9 @@
 
 import { StateCreator } from 'zustand';
 import { locationType, originLocationType } from '../Type';
-import { calculateDistanceToCurrentEndLocation, createDurationTableInSecs, calculateDurationToCurrentEndLocation, calculateRemainingTime,convertTime } from '../utils/broadCastUtil/calculation';
+import * as NavigationUtils from '../utils/navigationUtil/navigation';
+
+
 export enum NavigationStatus {
   NotStarted = 'not started',
   InProgress = 'in progress',
@@ -39,22 +41,32 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   remainingTime: undefined,
   setOrigin: (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-    const { currentEndLocation, durationTable, stepIndex } = get()
-    if (currentEndLocation) {
-      const distance = calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
+    const { currentEndLocation, durationTable, stepIndex, legs } = get()
+    if (currentEndLocation && NavigationStatus.InProgress) {
+      const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
       set({ distanceToCurrentEndLocation: distance });
-      const seconds = calculateDurationToCurrentEndLocation(distance);
-      const remainingTime = convertTime(calculateRemainingTime(stepIndex, seconds, durationTable!))
+      const seconds = NavigationUtils.calculateDurationToCurrentEndLocation(distance);
+      const remainingTime = NavigationUtils.convertTime(NavigationUtils.calculateRemainingTime(stepIndex, seconds, durationTable!))
+      set({ remainingTime })
+      if (distance < 5) {
+        const newIndex = stepIndex + 1
+        if (newIndex == legs!.steps.length) {
+          set({ navigationServiceStatus: NavigationStatus.Completed })
+          return
+        }
 
-      set({remainingTime})
+        const currentEndLocation = NavigationUtils.getEndLocation(legs!, newIndex)
+        set({ currentEndLocation, stepIndex: newIndex })
+      }
     }
+
   },
   setDestination: (newDestination: locationType) => { set({ destination: newDestination }) },
   setNavigationServiceStatus: (newStatus: NavigationStatus) => set({ navigationServiceStatus: newStatus }),
   setStepIndex: (newIndex: number) => set({ stepIndex: newIndex }),
 
   setLegs: (legs) => {
-    const durationTable = createDurationTableInSecs(legs);
+    const durationTable = NavigationUtils.createDurationTableInSecs(legs);
     set({ legs, durationTable })
   },
   setCurrentEndLocation: (location) => set({ currentEndLocation: location }),

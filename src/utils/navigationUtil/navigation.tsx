@@ -68,3 +68,13 @@ export const convertTime = (duration: number): string => {
 
   return formattedTime;
 };
+
+export const getEndLocation = (legs: google.maps.DirectionsLeg, stepIndex:number) => {
+  const lat = legs!.steps[stepIndex].end_location.lat()
+  const lng = legs!.steps[stepIndex].end_location.lng()
+  const end_location = {
+    lat,
+    lng
+  }
+  return end_location
+}

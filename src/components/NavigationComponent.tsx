@@ -33,26 +33,12 @@ export const NavigationComponent = () => {
     useEffect(() => {
         const startNavigationService = async () => {
             if (!routesLib || !map || !mapsLib) return;
-            if(!origin){
-                getPosition();
-                return 
+            map.setCenter(origin!);
+            map.setZoom(13)
+            if(origin && destination){
+                await navigationServiceStart(origin, destination);
             }
-            const bmcc = { lat: 40.713536, lng: -74.011223 };
-            const goldenDinner = { lat: 40.7284405, lng: -74.0 };
-            // await getDirections(start, end);
-            const home = {lat: 40.7898531, lng: -73.8078768}
-            // const crossStreet = { lat: 40.7898507, lng: -73.807 };
-            const neighbor = { lat: 40.7919567, lng: -73.8173405 }
-
-            await navigationServiceStart(home, neighbor);
-            
-            // if (navigationServiceStatus == NavigationStatus.InProgress) {
-            //     await navigationServiceStart(home, destination);
-            // }
-            // if(destination)
-            // await navigationServiceStart(origin,destination);
         };
-
         startNavigationService();
     }, [routesLib, map, mapsLib, setMap, origin, destination, navigationServiceStatus]);
 
