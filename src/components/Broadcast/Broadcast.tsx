@@ -6,7 +6,7 @@ import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { NavigationStatus } from '../../store/useNavigationSlice';
 // import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
-  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, legs, setLegs, currentEndLocation: endLocation, } = useStore.getState();
+  const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
   const { distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
@@ -19,6 +19,15 @@ export default function Broadcast() {
 
   useEffect(() => {
 
+    const getEndLocation = () => {
+      const lat = legs!.steps[stepIndex].end_location.lat()
+      const lng = legs!.steps[stepIndex].end_location.lng()
+      const end_location = {
+        lat,
+        lng
+      }
+      setEndLocation(end_location)
+    }
 
 
     if (!currentDirectionsRoute) return
@@ -27,7 +36,12 @@ export default function Broadcast() {
       return
     }
 
-  }, [currentDirectionsRoute, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus])
+    if (!endLocation) {
+      getEndLocation()
+      return
+    }
+   
+  }, [currentDirectionsRoute, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus,setLegs, setEndLocation])
 
   const prevInstructions = useRef('')
 
@@ -39,7 +53,7 @@ export default function Broadcast() {
       }
       prevInstructions.current = instructions
     }
-  }, [currentDirectionsRoute, stepIndex])
+  }, [currentDirectionsRoute])
 
 
   return (

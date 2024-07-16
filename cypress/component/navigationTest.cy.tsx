@@ -10,7 +10,7 @@ import { NavigationStatus } from '../../src/store/useNavigationSlice';
 const bmcc = { lat: 40.713536, lng: -74.011223 };
 const goldenDinner = { lat: 40.7284405, lng: -74.0 };
 // await getDirections(start, end);
-const home = {lat: 40.7898531, lng: -73.8078768}
+const home = { lat: 40.7898531, lng: -73.8078768 }
 // const crossStreet = { lat: 40.7898507, lng: -73.807 };
 const neighbor = { lat: 40.7919567, lng: -73.8173405 }
 
@@ -21,13 +21,11 @@ describe('PositionMarker Component', async () => {
 
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
-    const { setNavigationServiceStatus} = useStore.getState();
-    setNavigationServiceStatus(NavigationStatus.InProgress)
-
-
+    const { setDestination } = useStore.getState();
+    setDestination(neighbor);
     let index = -1
-    
-    const nextPosition = (index: number,latLngLiteralArray: google.maps.LatLngLiteral[]) => {
+
+    const nextPosition = (index: number, latLngLiteralArray: google.maps.LatLngLiteral[]) => {
       index++;
       if (index == latLngLiteralArray.length) {
         clearInterval(intervalID)
@@ -36,16 +34,14 @@ describe('PositionMarker Component', async () => {
       return index
     }
     const setLocation = () => {
-      const { setOrigin, map,latLngLiteralArray } = useStore.getState();
+      const { setOrigin, map, latLngLiteralArray } = useStore.getState();
+      // console.log(latLngLiteralArray)
       if (map && latLngLiteralArray) {
         index = nextPosition(index, latLngLiteralArray);
         const position = latLngLiteralArray[index]
         setOrigin(position)
-        // console.log(index)
-        // map!.setCenter(position)
       }
-
     };
-    const intervalID = setInterval(setLocation, 1000);
+    const intervalID = setInterval(setLocation, 500);
   });
 });

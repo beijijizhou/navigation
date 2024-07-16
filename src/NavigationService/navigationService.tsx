@@ -30,6 +30,7 @@ const getDirections = async (start: locationType, end: locationType) => {
                     // console.log(result.routes[0])
                     const latLngArray = directionsRouteToLatLngArray(result.routes[0]);
                     setLatLngLiteralArray(latLngArray);
+                    console.log(latLngArray)
                     resolve();
                 } else {
                     console.error(new Error('No directions found.'));

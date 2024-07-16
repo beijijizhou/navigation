@@ -24,6 +24,7 @@ export const App = () => {
       <APIProvider apiKey={API_KEY}>
         <Map
           style={{ width: '90vw', height: '90vh' }}
+          defaultCenter={origin as google.maps.LatLngLiteral}
           defaultZoom={13}
           mapId={MAP_ID}
         />
