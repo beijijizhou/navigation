@@ -1,6 +1,6 @@
 {
-    "name": "Name of your app",
-    "short_name": "Name of your app",
+    "name": "Assistive Navigation System",
+    "short_name": "ANS",
     "icons": [
       {
         "src": "/logo.png",
@@ -12,6 +12,6 @@
     "background_color": "#eab308",
     "display": "standalone",
     "scope": "/",
-    "start_url": "assistive-navigation-system-omega.vercel.app"
+    "start_url": "http://localhost:5173/"
   }
   
