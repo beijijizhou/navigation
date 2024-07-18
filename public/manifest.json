@@ -12,6 +12,6 @@
     "background_color": "#eab308",
     "display": "standalone",
     "scope": "/",
-    "start_url": "http://localhost:5173/"
+    "start_url": "assistive-navigation-system-omega.vercel.app"
   }
   
