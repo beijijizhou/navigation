@@ -61,7 +61,9 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
     }
 
   },
-  setDestination: (newDestination: locationType) => { set({ destination: newDestination }) },
+  setDestination: (newDestination: locationType) => {
+    set({ destination: newDestination, navigationServiceStatus: NavigationStatus.NotStarted })
+  },
   setNavigationServiceStatus: (newStatus: NavigationStatus) => set({ navigationServiceStatus: newStatus }),
   setStepIndex: (newIndex: number) => set({ stepIndex: newIndex }),
 
