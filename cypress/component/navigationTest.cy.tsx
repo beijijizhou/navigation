@@ -48,13 +48,13 @@ const staticallyRunTest = ()=>{
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
     const { setDestination } = useStore.getState();
-    setDestination(goldenDinner);
+    setDestination(neighbor);
   });
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
-  // dynamicallyRunTest();
-  staticallyRunTest();
+  dynamicallyRunTest();
+  // staticallyRunTest();
 
 });
 

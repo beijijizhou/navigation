@@ -69,7 +69,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   setStepIndex: (newIndex: number) => set({ stepIndex: newIndex }),
 
   setLegs: (legs) => {
-    const durationTable = NavigationUtils.createDurationTableInSecs(legs);
+    const durationTable = NavigationUtils.createLookUpTable(legs);
     set({ legs, durationTable })
   },
   setCurrentEndLocation: (location) => set({ currentEndLocation: location }),

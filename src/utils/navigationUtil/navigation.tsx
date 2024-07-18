@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as turf from "@turf/turf";
+export type LookUpTableType = "distance" | "time";
+
 function convertMetersToFeet(meters: number): number {
   const feetPerMeter = 3280.84;
   const distanceInFeet = meters * feetPerMeter;
   const roundedDistance = Math.round(distanceInFeet / 10) * 10;
   return roundedDistance;
-  
 }
 export const calculateDurationInMinutes = (distanceInFeet: number, averageSpeedInMph = 3.1) => {
   const distanceInMiles = distanceInFeet / 5280; // Convert feet to miles
@@ -36,23 +37,21 @@ export const calculateDurationToCurrentEndLocation = (distanceInFeet: number): n
   return Math.round(timeInSeconds);
 };
 
-export const calculateRemainingTime = (stepIndex:number,RemainingTimeToEndLocation:number, durationTable:Array<number>) =>{
-  if (stepIndex == durationTable.length - 1){
+export const calculateRemainingTime = (stepIndex: number, RemainingTimeToEndLocation: number, durationTable: Array<number>) => {
+  if (stepIndex == durationTable.length - 1) {
     return RemainingTimeToEndLocation
   }
-  console.log()
   return durationTable[stepIndex + 1] + RemainingTimeToEndLocation
 }
-export const createDurationTableInSecs = (leg: google.maps.DirectionsLeg) => {
+export const createLookUpTable = (leg: google.maps.DirectionsLeg) => {
   let duration = 0;
   const len = leg.steps.length;
-  const durationTable = new Array<number>(len);
-
+  const lookUpTable = new Array<number>(len);
   for (let i = 0; i < len; i++) {
-    duration += leg.steps[i].duration!.value; 
-    durationTable[i] = duration
+    duration += leg.steps[i].duration!.value;
+    lookUpTable[i] = duration
   }
-  return durationTable.reverse();
+  return lookUpTable.reverse();
 };
 export const convertTime = (duration: number): string => {
   const durationInMinutes = Math.ceil(duration / 60); // convert to minutes
@@ -72,7 +71,7 @@ export const convertTime = (duration: number): string => {
   return formattedTime;
 };
 
-export const getEndLocation = (legs: google.maps.DirectionsLeg, stepIndex:number) => {
+export const getEndLocation = (legs: google.maps.DirectionsLeg, stepIndex: number) => {
   const lat = legs!.steps[stepIndex].end_location.lat()
   const lng = legs!.steps[stepIndex].end_location.lng()
   const end_location = {
