@@ -6,3 +6,7 @@ export interface MultiPolygon {
   type: "MultiPolygon",
   coordinates: LngLatPoint[][][];
 }
+export enum LookUpTableType{
+  Distance = 'distance',
+  Time = "time",
+}

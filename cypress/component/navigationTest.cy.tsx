@@ -20,8 +20,7 @@ const dynamicallyRunTest = () => {
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
     const { setDestination } = useStore.getState();
-    setDestination(neighbor);
-
+    setDestination(goldenDinner);
     let index = -1;
     const nextPosition = (index: number, latLngLiteralArray: google.maps.LatLngLiteral[]) => {
       index++;
@@ -48,7 +47,7 @@ const staticallyRunTest = ()=>{
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
     const { setDestination } = useStore.getState();
-    setDestination(neighbor);
+    setDestination(goldenDinner);
   });
 }
 describe('PositionMarker Component', () => {

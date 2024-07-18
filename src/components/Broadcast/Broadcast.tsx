@@ -69,7 +69,7 @@ export default function Broadcast() {
 
           </p>
           <p style={{ fontSize: '12px' }} >
-            {distanceToCurrentEndLocation} feet <br />
+            in {distanceToCurrentEndLocation} meters <br />
           </p>
           {endLocation && <AdvancedMarker position={endLocation}>
             {/* <img src={destinationFlagURL} width={32} height={32} /> */}

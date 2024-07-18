@@ -1,6 +1,6 @@
 
 import { StateCreator } from 'zustand';
-import { locationType, originLocationType } from '../Type';
+import { locationType, originLocationType, LookUpTableType } from '../Type';
 import * as NavigationUtils from '../utils/navigationUtil/navigation';
 
 
@@ -18,7 +18,9 @@ export interface NavigationSlice {
   currentEndLocation: originLocationType;
   distanceToCurrentEndLocation: number,
   durationTable: Array<number> | undefined;
+  distanceTable: Array<number> | undefined;
   remainingTime: string | undefined;
+  remainingDistance: number;
   setOrigin: (newOrigin: originLocationType) => void;
   setDestination: (newDestination: locationType) => void;
   setNavigationServiceStatus: (status: NavigationStatus) => void;
@@ -39,7 +41,10 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   currentEndLocation: undefined,
   distanceToCurrentEndLocation: 0,
   durationTable: undefined,
+  distanceTable: undefined,
   remainingTime: undefined,
+  remainingDistance: 0,
+
   setOrigin: (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
     const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation } = get()
@@ -69,7 +74,9 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   setStepIndex: (newIndex: number) => set({ stepIndex: newIndex }),
 
   setLegs: (legs) => {
-    const durationTable = NavigationUtils.createLookUpTable(legs);
+    const durationTable = NavigationUtils.createLookUpTable(legs, LookUpTableType.Time);
+    NavigationUtils.createLookUpTable(legs, LookUpTableType.Distance);
+  
     set({ legs, durationTable })
   },
   setCurrentEndLocation: (location) => set({ currentEndLocation: location }),

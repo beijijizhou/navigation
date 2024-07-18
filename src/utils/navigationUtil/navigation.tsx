@@ -1,39 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as turf from "@turf/turf";
-export type LookUpTableType = "distance" | "time";
+import { LookUpTableType } from "../../Type";
 
-function convertMetersToFeet(meters: number): number {
-  const feetPerMeter = 3280.84;
-  const distanceInFeet = meters * feetPerMeter;
-  const roundedDistance = Math.round(distanceInFeet / 10) * 10;
-  return roundedDistance;
-}
-export const calculateDurationInMinutes = (distanceInFeet: number, averageSpeedInMph = 3.1) => {
-  const distanceInMiles = distanceInFeet / 5280; // Convert feet to miles
-  const durationInHours = distanceInMiles / averageSpeedInMph; // Calculate hours
-  return durationInHours * 60; // Convert hours to minutes
-};
 export const calculateDistanceToCurrentEndLocation = (endLocation: google.maps.LatLngLiteral, origin: google.maps.LatLngLiteral) => {
   const currentPoint = turf.point([origin.lng, origin.lat]);
   const endPoint = turf.point([endLocation.lng, endLocation.lat]);
   const d = turf.distance(currentPoint, endPoint)
-  return convertMetersToFeet(d)
+  
+  const roundedDistance = Math.round(d * 1000 / 10) * 10;
+  return roundedDistance
 }
 
 
-export const calculateDurationToCurrentEndLocation = (distanceInFeet: number): number => {
-  const feetPerMile = 5280;
-  const averageWalkingSpeedMph = 3.1; // average walking speed in miles per hour
-
-  // Convert distance to miles
-  const distanceInMiles = distanceInFeet / feetPerMile;
-
-  // Calculate time in hours
-  const timeInHours = distanceInMiles / averageWalkingSpeedMph;
-
-  // Convert time to seconds
-  const timeInSeconds = timeInHours * 3600;
-
+export const calculateDurationToCurrentEndLocation = (distanceInMeters: number): number => {
+  const averageWalkingSpeedMetersPerSecond = 1.4; // average walking speed in meters per second
+  // Calculate time in seconds
+  const timeInSeconds = distanceInMeters / averageWalkingSpeedMetersPerSecond;
   return Math.round(timeInSeconds);
 };
 
@@ -43,14 +25,21 @@ export const calculateRemainingTime = (stepIndex: number, RemainingTimeToEndLoca
   }
   return durationTable[stepIndex + 1] + RemainingTimeToEndLocation
 }
-export const createLookUpTable = (leg: google.maps.DirectionsLeg) => {
+export const createLookUpTable = (leg: google.maps.DirectionsLeg, type: string) => {
   let duration = 0;
   const len = leg.steps.length;
   const lookUpTable = new Array<number>(len);
   for (let i = 0; i < len; i++) {
-    duration += leg.steps[i].duration!.value;
+    if (type == LookUpTableType.Time) {
+      duration += leg.steps[i].duration!.value;
+    }
+    else{
+      duration += leg.steps[i].distance!.value;
+      console.log(leg.steps[i].distance)
+    }
     lookUpTable[i] = duration
   }
+  
   return lookUpTable.reverse();
 };
 export const convertTime = (duration: number): string => {
