@@ -1,0 +1,17 @@
+{
+    "name": "Name of your app",
+    "short_name": "Name of your app",
+    "icons": [
+      {
+        "src": "/logo.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "theme_color": "#eab308",
+    "background_color": "#eab308",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "http://localhost:5173/"
+  }
+  
