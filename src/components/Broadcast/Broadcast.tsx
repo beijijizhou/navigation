@@ -4,11 +4,11 @@ import { useEffect, useRef} from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { NavigationStatus } from '../../store/useNavigationSlice';
-import { getEndLocation } from '../../utils/navigationUtil/navigation';
+import { calculateDistanceToCurrentEndLocation, getEndLocation } from '../../utils/navigationUtil/navigation';
 import useSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex,legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
-  const { distanceToCurrentEndLocation, remainingTime, } = useStore.getState();
+  const { distanceToCurrentEndLocation, remainingTime, setRemainingTime,setDistanceToCurrentEndLocation} = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
   const extractInstructions = (text: string) => {
@@ -20,16 +20,24 @@ export default function Broadcast() {
 
   useEffect(() => {
     if (!currentDirectionsRoute) return
+    if(!remainingTime){
+      const time = currentDirectionsRoute.legs[0].duration
+      setRemainingTime(time!.text)
+    }
+
     if (!legs) {
       setLegs(currentDirectionsRoute.legs[0])
       return
     }
     if (!endLocation) {
-      setEndLocation(getEndLocation(legs,stepIndex))
+      setEndLocation(getEndLocation(legs!,stepIndex))
       return
     }
-    
-  }, [currentDirectionsRoute, setEndLocation,setLegs,origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus])
+    if(!distanceToCurrentEndLocation){
+      const distance = calculateDistanceToCurrentEndLocation(endLocation,origin as google.maps.LatLngLiteral)
+      setDistanceToCurrentEndLocation(distance)
+    }
+  }, [currentDirectionsRoute,distanceToCurrentEndLocation, setDistanceToCurrentEndLocation,setEndLocation,setLegs,origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus,remainingTime, setRemainingTime])
 
   const prevInstructions = useRef('')
 
@@ -41,7 +49,8 @@ export default function Broadcast() {
       }
       prevInstructions.current = instructions
     }
-  }, [currentDirectionsRoute])
+
+  }, [currentDirectionsRoute, stepIndex])
 
 
   return (

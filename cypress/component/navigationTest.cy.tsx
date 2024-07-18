@@ -14,17 +14,15 @@ const home = { lat: 40.7898531, lng: -73.8078768 }
 // const crossStreet = { lat: 40.7898507, lng: -73.807 };
 const neighbor = { lat: 40.7919567, lng: -73.8173405 }
 
-describe('PositionMarker Component', async () => {
-
-  it('should render correctly and update position', () => {
+const dynamicallyRunTest = () => {
+  it('dynamically run', () => {
     mount(<App />);
-
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
     const { setDestination } = useStore.getState();
     setDestination(neighbor);
-    let index = -1
 
+    let index = -1;
     const nextPosition = (index: number, latLngLiteralArray: google.maps.LatLngLiteral[]) => {
       index++;
       if (index == latLngLiteralArray.length) {
@@ -35,7 +33,6 @@ describe('PositionMarker Component', async () => {
     }
     const setLocation = () => {
       const { setOrigin, map, latLngLiteralArray } = useStore.getState();
-      // console.log(latLngLiteralArray)
       if (map && latLngLiteralArray) {
         index = nextPosition(index, latLngLiteralArray);
         const position = latLngLiteralArray[index]
@@ -44,4 +41,23 @@ describe('PositionMarker Component', async () => {
     };
     const intervalID = setInterval(setLocation, 500);
   });
+}
+const staticallyRunTest = ()=>{
+  it('statically run', () => {
+    mount(<App />);
+    cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
+    console.log("runs before")
+    const { setDestination } = useStore.getState();
+    setDestination(goldenDinner);
+  });
+}
+describe('PositionMarker Component', () => {
+  // Comment out or conditionally disable this function call
+  // dynamicallyRunTest();
+  staticallyRunTest();
+
 });
+
+
+
+

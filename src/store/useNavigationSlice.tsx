@@ -27,6 +27,7 @@ export interface NavigationSlice {
   setCurrentEndLocation: (location: originLocationType) => void;
   setDurationTable: (table: Array<number>) => void;
   setRemainingTime: (time: string) => void;
+  setDistanceToCurrentEndLocation: (distance: number) => void;
 }
 
 export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set, get) => ({
@@ -41,10 +42,10 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   remainingTime: undefined,
   setOrigin: (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-    const { currentEndLocation, durationTable, stepIndex, legs } = get()
+    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation } = get()
     if (currentEndLocation && NavigationStatus.InProgress) {
       const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
-      set({ distanceToCurrentEndLocation: distance });
+      setDistanceToCurrentEndLocation(distance)
       const seconds = NavigationUtils.calculateDurationToCurrentEndLocation(distance);
       const remainingTime = NavigationUtils.convertTime(NavigationUtils.calculateRemainingTime(stepIndex, seconds, durationTable!))
       set({ remainingTime })
@@ -74,4 +75,5 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   setCurrentEndLocation: (location) => set({ currentEndLocation: location }),
   setDurationTable: (table: Array<number>) => set({ durationTable: table }),
   setRemainingTime: (newRemainingTime: string) => set({ remainingTime: newRemainingTime }),
+  setDistanceToCurrentEndLocation: (newDistance: number) => set({ distanceToCurrentEndLocation: newDistance }),
 });

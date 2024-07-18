@@ -2,7 +2,10 @@
 import * as turf from "@turf/turf";
 function convertMetersToFeet(meters: number): number {
   const feetPerMeter = 3280.84;
-  return meters * feetPerMeter;
+  const distanceInFeet = meters * feetPerMeter;
+  const roundedDistance = Math.round(distanceInFeet / 10) * 10;
+  return roundedDistance;
+  
 }
 export const calculateDurationInMinutes = (distanceInFeet: number, averageSpeedInMph = 3.1) => {
   const distanceInMiles = distanceInFeet / 5280; // Convert feet to miles
