@@ -6,11 +6,10 @@ export const calculateDistanceToCurrentEndLocation = (endLocation: google.maps.L
   const currentPoint = turf.point([origin.lng, origin.lat]);
   const endPoint = turf.point([endLocation.lng, endLocation.lat]);
   const d = turf.distance(currentPoint, endPoint)
-  
+
   const roundedDistance = Math.round(d * 1000 / 10) * 10;
   return roundedDistance
 }
-
 
 export const calculateDurationToCurrentEndLocation = (distanceInMeters: number): number => {
   const averageWalkingSpeedMetersPerSecond = 1.4; // average walking speed in meters per second
@@ -19,7 +18,7 @@ export const calculateDurationToCurrentEndLocation = (distanceInMeters: number):
   return Math.round(timeInSeconds);
 };
 
-export const calculateRemainingTime = (stepIndex: number, RemainingTimeToEndLocation: number, durationTable: Array<number>) => {
+export const calculateRemaining = (stepIndex: number, RemainingTimeToEndLocation: number, durationTable: Array<number>) => {
   if (stepIndex == durationTable.length - 1) {
     return RemainingTimeToEndLocation
   }
@@ -33,13 +32,13 @@ export const createLookUpTable = (leg: google.maps.DirectionsLeg, type: string) 
     if (type == LookUpTableType.Time) {
       duration += leg.steps[i].duration!.value;
     }
-    else{
+    else {
       duration += leg.steps[i].distance!.value;
-      console.log(leg.steps[i].distance)
+      
     }
     lookUpTable[i] = duration
   }
-  
+
   return lookUpTable.reverse();
 };
 export const convertTime = (duration: number): string => {

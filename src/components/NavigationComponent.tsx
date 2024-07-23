@@ -38,7 +38,6 @@ export const NavigationComponent = () => {
                 map.setZoom(13)
             }
             if (origin && destination) {
-                console.log(navigationServiceStatus == NavigationStatus.NotStarted)
                 if (navigationServiceStatus == NavigationStatus.NotStarted) {                    
                     await navigationServiceStart(origin, destination);
                     setNavigationServiceStatus(NavigationStatus.InProgress)

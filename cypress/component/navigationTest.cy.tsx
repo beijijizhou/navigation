@@ -20,7 +20,7 @@ const dynamicallyRunTest = () => {
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
     const { setDestination } = useStore.getState();
-    setDestination(goldenDinner);
+    setDestination(neighbor);
     let index = -1;
     const nextPosition = (index: number, latLngLiteralArray: google.maps.LatLngLiteral[]) => {
       index++;

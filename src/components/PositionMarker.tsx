@@ -11,10 +11,7 @@ export const PositionMarker = () => {
     const [watchId, setWatchId] = useState<number | null>(null);
     let watchTimes = 0
     const startTime = new Date().getTime();
-    const beachFlagImg = document.createElement("img");
-    // console.log(AdvancedMarkerElement)
-    beachFlagImg.src =
-        "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
 
     useEffect(() => {
 

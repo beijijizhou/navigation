@@ -29,6 +29,7 @@ export interface NavigationSlice {
   setCurrentEndLocation: (location: originLocationType) => void;
   setDurationTable: (table: Array<number>) => void;
   setRemainingTime: (time: string) => void;
+  setRemainingDistance: (distance: number) => void;
   setDistanceToCurrentEndLocation: (distance: number) => void;
 }
 
@@ -47,13 +48,14 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
 
   setOrigin: (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation } = get()
+    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation,distanceTable } = get()
     if (currentEndLocation && NavigationStatus.InProgress) {
       const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
       setDistanceToCurrentEndLocation(distance)
       const seconds = NavigationUtils.calculateDurationToCurrentEndLocation(distance);
-      const remainingTime = NavigationUtils.convertTime(NavigationUtils.calculateRemainingTime(stepIndex, seconds, durationTable!))
-      set({ remainingTime })
+      const remainingTime = NavigationUtils.convertTime(NavigationUtils.calculateRemaining(stepIndex, seconds, durationTable!))
+      const remainingDistance = NavigationUtils.calculateRemaining(stepIndex, seconds, distanceTable!)
+      set({ remainingTime, remainingDistance })
       if (distance < 5) {
         const newIndex = stepIndex + 1
         if (newIndex == legs!.steps.length) {
@@ -62,7 +64,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
         }
 
         const currentEndLocation = NavigationUtils.getEndLocation(legs!, newIndex)
-        set({ currentEndLocation, stepIndex: newIndex })
+        set({ currentEndLocation, stepIndex: newIndex, })
       }
     }
 
@@ -75,12 +77,13 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
 
   setLegs: (legs) => {
     const durationTable = NavigationUtils.createLookUpTable(legs, LookUpTableType.Time);
-    NavigationUtils.createLookUpTable(legs, LookUpTableType.Distance);
-  
-    set({ legs, durationTable })
+    const distanceTable = NavigationUtils.createLookUpTable(legs, LookUpTableType.Distance);
+    set({ legs, durationTable, distanceTable })
   },
   setCurrentEndLocation: (location) => set({ currentEndLocation: location }),
   setDurationTable: (table: Array<number>) => set({ durationTable: table }),
   setRemainingTime: (newRemainingTime: string) => set({ remainingTime: newRemainingTime }),
+  setRemainingDistance: (newDistance: number) => set({ remainingDistance: newDistance }),
+
   setDistanceToCurrentEndLocation: (newDistance: number) => set({ distanceToCurrentEndLocation: newDistance }),
 });
