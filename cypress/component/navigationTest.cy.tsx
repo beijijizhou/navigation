@@ -1,7 +1,6 @@
 
 // PositionMarker.cy.js
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { geoLocation } from '../e2e/0-test/points'
 import React from 'react';
 import { mount } from 'cypress/react18'
 import { App } from "../../src/App"
