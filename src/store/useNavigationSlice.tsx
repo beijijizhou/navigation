@@ -2,7 +2,7 @@
 import { StateCreator } from 'zustand';
 import { locationType, originLocationType, LookUpTableType } from '../Type';
 import * as NavigationUtils from '../utils/navigationUtil/navigation';
-
+import { getSidewalkFeaturesInRange } from '../apis/fetchData';
 
 export enum NavigationStatus {
   NotStarted = 'not started',
@@ -48,6 +48,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
 
   setOrigin: (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
+    getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
     const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation,distanceTable } = get()
     if (currentEndLocation && NavigationStatus.InProgress) {
       const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
@@ -62,7 +63,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
           set({ navigationServiceStatus: NavigationStatus.Completed })
           return
         }
-
+        
         const currentEndLocation = NavigationUtils.getEndLocation(legs!, newIndex)
         set({ currentEndLocation, stepIndex: newIndex, })
       }

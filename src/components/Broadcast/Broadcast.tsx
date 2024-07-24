@@ -40,7 +40,7 @@ export default function Broadcast() {
       const distance = calculateDistanceToCurrentEndLocation(endLocation, origin as google.maps.LatLngLiteral)
       setDistanceToCurrentEndLocation(distance)
     }
-  }, [currentDirectionsRoute, distanceToCurrentEndLocation, setDistanceToCurrentEndLocation, setEndLocation, setLegs, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus, remainingTime, setRemainingTime])
+  }, [currentDirectionsRoute, remainingDistance,setRemainingDistance,distanceToCurrentEndLocation, setDistanceToCurrentEndLocation, setEndLocation, setLegs, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus, remainingTime, setRemainingTime])
 
   const prevInstructions = useRef('')
 

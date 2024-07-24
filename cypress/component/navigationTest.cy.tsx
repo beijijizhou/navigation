@@ -6,12 +6,12 @@ import { mount } from 'cypress/react18'
 import { App } from "../../src/App"
 import useStore from '../../src/store';
 import { NavigationStatus } from '../../src/store/useNavigationSlice';
-const bmcc = { lat: 40.713536, lng: -74.011223 };
-const goldenDinner = { lat: 40.7284405, lng: -74.0 };
+export const bmcc = { lat: 40.713536, lng: -74.011223 };
+export const goldenDinner = { lat: 40.7284405, lng: -74.0 };
 // await getDirections(start, end);
-const home = { lat: 40.7898531, lng: -73.8078768 }
+export const home = { lat: 40.7898531, lng: -73.8078768 }
 // const crossStreet = { lat: 40.7898507, lng: -73.807 };
-const neighbor = { lat: 40.7919567, lng: -73.8173405 }
+export const neighbor = { lat: 40.7919567, lng: -73.8173405 }
 
 const dynamicallyRunTest = () => {
   it('dynamically run', () => {
@@ -40,19 +40,20 @@ const dynamicallyRunTest = () => {
     const intervalID = setInterval(setLocation, 500);
   });
 }
-const staticallyRunTest = ()=>{
+const staticallyRunTest = () => {
   it('statically run', () => {
     mount(<App />);
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     console.log("runs before")
-    const { setDestination } = useStore.getState();
-    setDestination(goldenDinner);
+    const { setOrigin, setDestination } = useStore.getState();
+    // setOrigin(bmcc)
+    setDestination(neighbor);
   });
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
-  dynamicallyRunTest();
-  // staticallyRunTest();
+  // dynamicallyRunTest();
+  staticallyRunTest();
 
 });
 

@@ -1,6 +1,6 @@
 import { MultiPolygon, LngLatPoint } from "../Type";
 import useStore from "../store";
-import { getSidewalkAccessibility } from '../apis/getSidewalkAccessibility';
+import { getSidewalkAccessibility } from '../apis/fetchData';
 import { WKBArrayToMultiPolygon } from '../utils/readWKB';
 function createMultiPolygonOnMap(coordinates:  LngLatPoint[][][]) {
   const { map,mapsLib } = useStore.getState();
