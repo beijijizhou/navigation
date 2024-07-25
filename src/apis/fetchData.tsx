@@ -1,7 +1,11 @@
 import axios from 'axios';
 import { locationType } from '../Type';
-const url = 'http://34.46.145.148:5000/get-sidewalk-features-in-range';
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+const useCorsProxy = import.meta.env.VITE_USE_CORS_PROXY ;
+
+const url = proxyUrl + 'http://34.46.145.148:5000/get-sidewalk-features-in-range';
 // const bmcc = { lat: 40.713536, lng: -74.011223 };
+// const url =  'http://34.46.145.148:5000/get-sidewalk-features-in-range';
 
 const home = { lat: 40.7898531, lng: -73.8078768 }
 import { WKBStringArray } from '../Type';
@@ -22,6 +26,7 @@ export const getSidewalkAccessibility = async (linePoints: locationType[]) => {
 export const getSidewalkFeaturesInRange = async (currentPosition: google.maps.LatLngLiteral) => {
   try {
     console.log(currentPosition)
+    console.log(useCorsProxy)
     const { lat, lng } = home;
     const km_distance = 0.100; // You can adjust the distance as needed
     const requestedUrl = `${url}?focal_lat=${lat}&focal_lon=${lng}&km_distance=${km_distance}`;
