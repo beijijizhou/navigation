@@ -1,7 +1,7 @@
-import { MultiPolygon, LngLatPoint, LandmarkType } from "../Type";
+import { MultiPolygon, LngLatPoint, LandmarkType, GeometryType } from "../Type";
 import useStore from "../store";
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
-import { treeURL } from "../assets/icon";
+import { conditionMissURL, fireHyrantURL, goodConditionURL, treeURL } from "../assets/icon";
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
 import { Geometry } from "../Type";
 function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
@@ -16,10 +16,10 @@ function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
       // Create the polygon
       const newPolygon = new mapsLib!.Polygon({
         paths: polygonPaths,
-        strokeColor: '#FF0000',
+        strokeColor: '#000000',
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#FF0000',
+        fillColor: '#000000',
         fillOpacity: 0.35
       });
 
@@ -32,21 +32,37 @@ export const plot = (MultiPolygonArrays: MultiPolygon[]) => {
   MultiPolygonArrays.forEach(MultiPolygon => createMultiPolygonOnMap(MultiPolygon.coordinates))
 }
 
-const createTrees = (geometry: Geometry) => {
-
+const createPoints = (geometry: Geometry) => {
+  let url = "";
+  switch(geometry.landmarkType){
+    case LandmarkType.Tree:
+      url = treeURL;
+      break;
+    case LandmarkType.FireHydrant:
+      url = fireHyrantURL
+      break;
+    case LandmarkType.PedestrianRampwayConditionMissing:
+      url = conditionMissURL
+      break
+    case LandmarkType.PedestrianRampwayGoodCondition:
+      url = goodConditionURL
+      break
+    default:
+      console.log(geometry.landmarkType, geometry.coordinates)
+  }
   return (
     <AdvancedMarker
       position={{ lat: geometry.coordinates[1] as number, lng: geometry.coordinates[0] as number }}
     >
-    <img src={treeURL} width={32} height={32} />
-
+    <img src={url} width={32} height={32} />
     </AdvancedMarker>
   );
 };
 export const plotLandmarks = (geometry: Geometry) => {
-  switch (geometry.landmarkType) {
-    case LandmarkType.Tree:
-      return createTrees(geometry)
+  
+  switch (geometry.type) {
+    case GeometryType.Point:
+      return createPoints(geometry)
     default:
       createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
   }

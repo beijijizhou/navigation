@@ -28,6 +28,8 @@ export enum LandmarkType {
   Building = "Building",
   KnobNoSubtype = "Knob - No Subtype",
   Tree = "Tree",
+  PedestrianRampwayConditionMissing = "Pedestrian Rampway - Condition Missing",
+  PedestrianRampwayGoodCondition = "Pedestrian Rampway - Good Condition",
 }
 
 export type Geometry = {
