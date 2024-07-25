@@ -33,12 +33,13 @@ export const NavigationComponent = () => {
     useEffect(() => {
         const startNavigationService = async () => {
             if (!routesLib || !map || !mapsLib) return;
+            console.log(map.getZoom())
             if (navigationServiceStatus == NavigationStatus.NotStarted) {
                 map.setCenter(origin!);
                 map.setZoom(13)
             }
             if (origin && destination) {
-                if (navigationServiceStatus == NavigationStatus.NotStarted) {                    
+                if (navigationServiceStatus == NavigationStatus.NotStarted) {
                     await navigationServiceStart(origin, destination);
                     setNavigationServiceStatus(NavigationStatus.InProgress)
                 }

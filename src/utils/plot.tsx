@@ -20,10 +20,10 @@ function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
       const newPolygon = new mapsLib!.Polygon({
         paths: polygonPaths,
         strokeColor: '#000000',
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.5,
         strokeWeight: 2,
-        fillColor: '#000000',
-        fillOpacity: 0.35
+        
+        fillOpacity: 0.1
       });
 
       // Add polygon to map
@@ -37,6 +37,9 @@ export const plot = (MultiPolygonArrays: MultiPolygon[]) => {
 
 const createPoints = (geometry: Geometry) => {
   const url = landmarkURLMap[geometry.landmarkType];
+  if(url == ""){
+    // console.log(geometry.landmarkType)
+  }
   return (
     <AdvancedMarker
       position={{ lat: geometry.coordinates[1] as number, lng: geometry.coordinates[0] as number }}
@@ -76,7 +79,6 @@ function findContainingMultipolygon(geometry: Geometry): MultiPolygon | null {
   if (geometry.type === 'MultiPolygon') {
     const multiPolygon = turf.multiPolygon(geometry.coordinates as LngLatPoint[][][]);
     if (booleanPointInPolygon(pt, multiPolygon)) {
-      console.log(geometry)
       return geometry as MultiPolygon;
     }
   }
