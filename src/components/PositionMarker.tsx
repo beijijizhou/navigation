@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import /*React,*/ { useEffect, useState } from 'react';
-import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
+import /*React,*/ { useEffect, useState, useRef} from 'react';
+import { AdvancedMarker, Pin} from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
 import { originURL } from '../assets/icon';
 import PlotGeometry from './Broadcast/PlotGeometry';
 export const PositionMarker = () => {
     const { origin, map, setOrigin } = useStore((state) => state);
+    const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(null);
 
     const [watchId, setWatchId] = useState<number | null>(null);
     let watchTimes = 0
@@ -15,13 +16,17 @@ export const PositionMarker = () => {
 
 
     useEffect(() => {
-
+        if (markerRef.current) {
+            // Update the marker's position
+            markerRef.current.position = new google.maps.LatLng(origin!.lat, origin!.lng);
+          }
     }, [origin])
     useEffect(() => {
         const successCallback = (position: GeolocationPosition) => {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
             const newOrigin = { lat: latitude, lng: longitude };
+            
             setOrigin(newOrigin);
             // map!.setCenter(newOrigin);
             watchTimes++;
@@ -75,7 +80,7 @@ export const PositionMarker = () => {
                                 Lat: {origin.lat}<br />
                                 Lng: {origin.lng}
                             </p>
-                            <AdvancedMarker position={origin} >
+                            <AdvancedMarker ref={markerRef} position={origin} >
                                 <img src={originURL} width={32} height={32} />
                                 <Pin
                                     background={'#0f9d58'}
