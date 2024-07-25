@@ -25,7 +25,7 @@ export const getSidewalkAccessibility = async (linePoints: locationType[]) => {
 export const getSidewalkFeaturesInRange = async (currentPosition: google.maps.LatLngLiteral) => {
   try {
     const { lat, lng } = currentPosition;
-    const km_distance = 0.050; // You can adjust the distance as needed
+    const km_distance = 0.100; // You can adjust the distance as needed
     const requestedUrl = `${url}?focal_lat=${lat}&focal_lon=${lng}&km_distance=${km_distance}`;
     const response = await axios.get(requestedUrl);
     const geometryArray = WKBArrayToGeometry(response.data.points as WKBStringArray[])

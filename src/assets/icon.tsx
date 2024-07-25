@@ -5,3 +5,4 @@ export const treeURL = "https://img.icons8.com/?size=100&id=65474&format=png&col
 export const fireHyrantURL = "https://img.icons8.com/?size=100&id=11919&format=png&color=000000"
 export const goodConditionURL = "https://img.icons8.com/?size=100&id=123575&format=png&color=40C057"
 export const conditionMissURL = "https://img.icons8.com/?size=100&id=4Vl1KmhbCXoZ&format=png&color=000000"
+export const defectiveConditionURL = "https://img.icons8.com/?size=100&id=j1rPetruM5Fl&format=png&color=000000"

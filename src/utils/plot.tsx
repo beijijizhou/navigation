@@ -1,7 +1,7 @@
 import { MultiPolygon, LngLatPoint, LandmarkType, GeometryType } from "../Type";
 import useStore from "../store";
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
-import { conditionMissURL, fireHyrantURL, goodConditionURL, treeURL } from "../assets/icon";
+import { conditionMissURL, defectiveConditionURL, fireHyrantURL, goodConditionURL, treeURL } from "../assets/icon";
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
 import { Geometry } from "../Type";
 function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
@@ -47,8 +47,12 @@ const createPoints = (geometry: Geometry) => {
     case LandmarkType.PedestrianRampwayGoodCondition:
       url = goodConditionURL
       break
+    case LandmarkType.PedestrianRampwayDefective:
+      url = defectiveConditionURL
+      break
     default:
-      console.log(geometry.landmarkType, geometry.coordinates)
+      // console.log(geometry.landmarkType, geometry.coordinates)
+      return
   }
   return (
     <AdvancedMarker
