@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MultiPolygon, LngLatPoint, LandmarkType, GeometryType } from "../Type";
+import { MultiPolygon, LngLatPoint,  GeometryType } from "../Type";
 import useStore from "../store";
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
-import { conditionMissURL, defectiveConditionURL, fireHyrantURL, goodConditionURL, knobPullURL, landmarkURLMap, treeURL } from "../assets/icon";
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
+import { landmarkURLMap } from "../assets/icon";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import * as turf from "@turf/turf";
 import { Geometry } from "../Type";
@@ -55,7 +55,7 @@ export const plotLandmarks = (geometry: Geometry) => {
 
         // if (geometry.landmarkType == LandmarkType.Sidewalk) {
         //   console.log(geometry.coordinates)
-        //   const multipolygon = findContainingMultipolygon(geometry)
+          findContainingMultipolygon(geometry)
         //   if (multipolygon) {
         //     createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
         //   }
