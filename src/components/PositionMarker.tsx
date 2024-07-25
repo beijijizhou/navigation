@@ -5,6 +5,7 @@ import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
 import { originURL } from '../assets/icon';
+import PlotGeometry from './Broadcast/PlotGeometry';
 export const PositionMarker = () => {
     const { origin, map, setOrigin } = useStore((state) => state);
 
@@ -63,30 +64,34 @@ export const PositionMarker = () => {
     }, [map]); // Ensure effect runs correctly with required dependencies
 
     return (
-        <h1 id="positionMarker" style={{ width: '100%' }}>
+        <div>
+            
+            <h1 id="positionMarker" style={{ width: '100%' }}>
+                {origin ?
+                    (
+                        <div>
+                            <p style={{ fontSize: '12px' }}>
+                                Current position at<br />
+                                Lat: {origin.lat}<br />
+                                Lng: {origin.lng}
+                            </p>
+                            <AdvancedMarker position={origin} >
+                                <img src={originURL} width={32} height={32} />
+                                <Pin
+                                    background={'#0f9d58'}
+                                    borderColor={'#006425'}
+                                    glyphColor={'#60d98f'}
+                                />
+                            </AdvancedMarker>
+                            <Broadcast></Broadcast>
+                        </div>
 
+                    )
+                    : <p></p>}
+            </h1>
+            <PlotGeometry></PlotGeometry>
+          
+        </div>
 
-            {origin ?
-                (
-                    <div>
-                        <p style={{ fontSize: '12px' }}>
-                            Current position at<br />
-                            Lat: {origin.lat}<br />
-                            Lng: {origin.lng}
-                        </p>
-                        <AdvancedMarker position={origin} >
-                            <img src={originURL} width={32} height={32} />
-                            <Pin
-                                background={'#0f9d58'}
-                                borderColor={'#006425'}
-                                glyphColor={'#60d98f'}
-                            />
-                        </AdvancedMarker>
-                        <Broadcast></Broadcast>
-                    </div>
-
-                )
-                : <p></p>}
-        </h1>
     );
 };

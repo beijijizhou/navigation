@@ -6,7 +6,6 @@ import UserInputOutput from './components/UserInputOutput';
 import { useEffect } from 'react';
 import useStore from './store';
 import { getPosition } from './NavigationService/getPosition';
-
 export const App = () => {
 
   const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -17,7 +16,7 @@ export const App = () => {
       // alert("Please allow us to access your current location")
       getPosition();
     }
-    
+
   }, [origin])
   return (
     <div style={{ display: 'flex' }}>
@@ -31,6 +30,7 @@ export const App = () => {
         <NavigationComponent />
         <UserInputOutput />
       </APIProvider>
+      
     </div>
   );
 }

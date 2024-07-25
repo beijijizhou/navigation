@@ -1,9 +1,8 @@
 
 import { StateCreator } from 'zustand';
-import { locationType, originLocationType, LookUpTableType } from '../Type';
+import { locationType, originLocationType, LookUpTableType, Geometry } from '../Type';
 import * as NavigationUtils from '../utils/navigationUtil/navigation';
 import { getSidewalkFeaturesInRange } from '../apis/fetchData';
-
 export enum NavigationStatus {
   NotStarted = 'not started',
   InProgress = 'in progress',
@@ -21,6 +20,7 @@ export interface NavigationSlice {
   distanceTable: Array<number> | undefined;
   remainingTime: string | undefined;
   remainingDistance: number;
+  geometryArray: Geometry[] | undefined;
   setOrigin: (newOrigin: originLocationType) => void;
   setDestination: (newDestination: locationType) => void;
   setNavigationServiceStatus: (status: NavigationStatus) => void;
@@ -45,11 +45,16 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   distanceTable: undefined,
   remainingTime: undefined,
   remainingDistance: 0,
-
-  setOrigin: (newOrigin: originLocationType) => {
+  geometryArray: undefined,
+  setOrigin: async (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-    getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
-    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation,distanceTable } = get()
+
+    const { geometryArray, currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable } = get()
+    const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
+    if (!geometryArray) {
+      set({ geometryArray: newGeometryArray })
+    }
+
     if (currentEndLocation && NavigationStatus.InProgress) {
       const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
       setDistanceToCurrentEndLocation(distance)
@@ -59,11 +64,12 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
       set({ remainingTime, remainingDistance })
       if (distance < 5) {
         const newIndex = stepIndex + 1
+        set({ geometryArray: newGeometryArray })
         if (newIndex == legs!.steps.length) {
           set({ navigationServiceStatus: NavigationStatus.Completed })
           return
         }
-        
+
         const currentEndLocation = NavigationUtils.getEndLocation(legs!, newIndex)
         set({ currentEndLocation, stepIndex: newIndex, })
       }

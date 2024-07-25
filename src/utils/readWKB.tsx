@@ -2,22 +2,18 @@
 // 
 import * as wkx from 'wkx';
 import { Buffer } from 'buffer';
-import { MultiPolygon } from '../Type';
+import { WKBStringArray, Geometry, LandmarkType} from '../Type';
 window.Buffer = window.Buffer || Buffer;
-
-
-
-
-export const readWKB = (wkbstring: string):MultiPolygon => {
-   
+const readWKB = (wkbstring: string) => {
     const wkbBuffer = window.Buffer.from(wkbstring, 'hex');
     const geometry = wkx.Geometry.parse(wkbBuffer);
-    return geometry.toGeoJSON() as MultiPolygon;
+    return geometry.toGeoJSON() as Geometry;
 };
-export const WKBArrayToMultiPolygon = (wkbArray: string[]) => {
-    return wkbArray.map(point => {
-        const multiPolygonArray = readWKB(point[0]);
-        return multiPolygonArray
+export const WKBArrayToGeometry = (wkbArray: WKBStringArray[]) => {
+    return wkbArray.map(wkbstring => {
+        const geometry = readWKB(wkbstring[0]);
+        geometry.landmarkType = wkbstring[1] as LandmarkType;
+        return geometry
     });
 };
 

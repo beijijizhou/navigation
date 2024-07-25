@@ -1,9 +1,9 @@
-import { MultiPolygon, LngLatPoint } from "../Type";
+import { MultiPolygon, LngLatPoint, GeometryType } from "../Type";
 import useStore from "../store";
-import { getSidewalkAccessibility } from '../apis/fetchData';
-import { WKBArrayToMultiPolygon } from '../utils/readWKB';
-function createMultiPolygonOnMap(coordinates:  LngLatPoint[][][]) {
-  const { map,mapsLib } = useStore.getState();
+// import { WKBArrayToMultiPolygon } from '../utils/readWKB';
+import { Geometry } from "../Type";
+function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
+  const { map, mapsLib } = useStore.getState();
   coordinates.forEach((polygonCoords: LngLatPoint[][]) => {
     polygonCoords.forEach((polygon: LngLatPoint[]) => {
       const polygonPaths = polygon.map((ring: LngLatPoint) => ({
@@ -26,14 +26,27 @@ function createMultiPolygonOnMap(coordinates:  LngLatPoint[][][]) {
     });
   });
 }
-const plot = (MultiPolygonArrays: MultiPolygon[]) => {
+export const plot = (MultiPolygonArrays: MultiPolygon[]) => {
   MultiPolygonArrays.forEach(MultiPolygon => createMultiPolygonOnMap(MultiPolygon.coordinates))
 }
 
-export const plotIntersection = async() =>{
-  const { latLngLiteralArray } = useStore.getState();
-  const WKBstringArray: string[] = await getSidewalkAccessibility(latLngLiteralArray);
-  const MultiPolygonArrays = WKBArrayToMultiPolygon(WKBstringArray)
-  // console.log(MultiPolygonArrays)
-  plot(MultiPolygonArrays)
+// export const plotIntersection = async () => {
+//   const { latLngLiteralArray } = useStore.getState();
+//   const WKBstringArray: string[] = await getSidewalkAccessibility(latLngLiteralArray);
+//   const MultiPolygonArrays = WKBArrayToMultiPolygon(WKBstringArray)
+//   // console.log(MultiPolygonArrays)
+//   plot(MultiPolygonArrays)
+// }
+const  createPoints = (geometry: Geometry)=>{
+
+}
+export const plotLandmarks = (geometryArray: Geometry[]) => {
+  for (const geometry of geometryArray) {
+    if (geometry.type == GeometryType.MultiPolygon) {
+      createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][])
+    }
+    else{
+      createPoints(geometry)
+    }
+  }
 }

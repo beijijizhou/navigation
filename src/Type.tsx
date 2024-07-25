@@ -6,7 +6,33 @@ export interface MultiPolygon {
   type: "MultiPolygon",
   coordinates: LngLatPoint[][][];
 }
-export enum LookUpTableType{
+export enum LookUpTableType {
   Distance = 'distance',
   Time = "time",
 }
+
+export type WKBStringArray = [wkb: string, type: string];
+type Lng = number;
+type Lat = number;
+export enum GeometryType {
+  Point = "Point",
+  MultiPolygon = "MultiPolygon"
+}
+export enum LandmarkType {
+  KnobPull = "Knob - Pull",
+  DoorDouble = "Door - Double",
+  DoorSingle = "Door - Single",
+  Stairs = "Stairs",
+  FireHydrant = "Fire Hydrant",
+  Sidewalk = "Sidewalk",
+  Building = "Building",
+  KnobNoSubtype = "Knob - No Subtype",
+  Tree = "Tree",
+}
+
+export type Geometry = {
+  type: GeometryType,
+  landmarkType: LandmarkType,
+  coordinates: [Lng, Lat] | LngLatPoint[][][],
+}
+

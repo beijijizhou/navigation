@@ -83,6 +83,7 @@ export default function Broadcast() {
             />
           </AdvancedMarker>}
           {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
+          
         </div>
       )}
     </div>

@@ -52,8 +52,8 @@ const staticallyRunTest = () => {
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
-  // dynamicallyRunTest();
-  staticallyRunTest();
+  dynamicallyRunTest();
+  // staticallyRunTest();
 
 });
 

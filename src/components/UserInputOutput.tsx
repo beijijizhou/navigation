@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import useStore from "../store";
 import { PositionMarker } from "./PositionMarker";
+
 export default function UserInputOutput() {
   const {
     setDestination,
@@ -118,6 +119,7 @@ export default function UserInputOutput() {
       </div>
       <div>
         <PositionMarker></PositionMarker>
+      
         {/* {navigationServiceStatus == NavigationStatus.InProgress && <PositionMarker></PositionMarker>} */}
       </div>
     </div>
