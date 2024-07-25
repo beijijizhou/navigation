@@ -2,7 +2,7 @@ export type locationType = string | google.maps.LatLng | google.maps.Place | goo
 export type LngLatPoint = [number, number]
 export type originLocationType = google.maps.LatLngLiteral | null | undefined;
 export type coordinatesArray = [[LngLatPoint[], LngLatPoint[]]]
-export interface MultiPolygon {
+export type MultiPolygon = {
   type: "MultiPolygon",
   coordinates: LngLatPoint[][][];
 }
@@ -19,14 +19,16 @@ export enum GeometryType {
   MultiPolygon = "MultiPolygon"
 }
 export enum LandmarkType {
-  KnobPull = "Knob - Pull",
   DoorDouble = "Door - Double",
   DoorSingle = "Door - Single",
+  DoorRevolving = "Door - Revolving",
+  KnobPull = "Knob - Pull",
+  KnobVerticalBar = "Knob - Vertical Bar",
+  KnobNoSubtype = "Knob - No Subtype",
   Stairs = "Stairs",
   FireHydrant = "Fire Hydrant",
   Sidewalk = "Sidewalk",
   Building = "Building",
-  KnobNoSubtype = "Knob - No Subtype",
   Tree = "Tree",
   PedestrianRampwayConditionMissing = "Pedestrian Rampway - Condition Missing",
   PedestrianRampwayGoodCondition = "Pedestrian Rampway - Good Condition",

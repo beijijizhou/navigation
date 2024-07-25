@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { MultiPolygon, LngLatPoint, LandmarkType, GeometryType } from "../Type";
 import useStore from "../store";
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
-import { conditionMissURL, defectiveConditionURL, fireHyrantURL, goodConditionURL, treeURL } from "../assets/icon";
+import { conditionMissURL, defectiveConditionURL, fireHyrantURL, goodConditionURL, knobPullURL, landmarkURLMap, treeURL } from "../assets/icon";
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import * as turf from "@turf/turf";
 import { Geometry } from "../Type";
 function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
   const { map, mapsLib } = useStore.getState();
@@ -33,44 +36,50 @@ export const plot = (MultiPolygonArrays: MultiPolygon[]) => {
 }
 
 const createPoints = (geometry: Geometry) => {
-  let url = "";
-  switch(geometry.landmarkType){
-    case LandmarkType.Tree:
-      url = treeURL;
-      break;
-    case LandmarkType.FireHydrant:
-      url = fireHyrantURL
-      break;
-    case LandmarkType.PedestrianRampwayConditionMissing:
-      url = conditionMissURL
-      break
-    case LandmarkType.PedestrianRampwayGoodCondition:
-      url = goodConditionURL
-      break
-    case LandmarkType.PedestrianRampwayDefective:
-      url = defectiveConditionURL
-      break
-    default:
-      // console.log(geometry.landmarkType, geometry.coordinates)
-      return
-  }
+  const url = landmarkURLMap[geometry.landmarkType];
   return (
     <AdvancedMarker
       position={{ lat: geometry.coordinates[1] as number, lng: geometry.coordinates[0] as number }}
     >
-    <img src={url} width={32} height={32} />
+      <img src={url} width={32} height={32} />
     </AdvancedMarker>
   );
 };
 export const plotLandmarks = (geometry: Geometry) => {
-  
   switch (geometry.type) {
     case GeometryType.Point:
       return createPoints(geometry)
     default:
-      createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
+      {
+        createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
+
+        // if (geometry.landmarkType == LandmarkType.Sidewalk) {
+        //   console.log(geometry.coordinates)
+        //   const multipolygon = findContainingMultipolygon(geometry)
+        //   if (multipolygon) {
+        //     createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
+        //   }
+        // }
+
+      }
+
   }
   return <div></div>
+}
+
+function findContainingMultipolygon(geometry: Geometry): MultiPolygon | null {
+  const { origin } = useStore.getState()
+
+  const pt = turf.point([origin!.lng, origin!.lat]);
 
 
+  if (geometry.type === 'MultiPolygon') {
+    const multiPolygon = turf.multiPolygon(geometry.coordinates as LngLatPoint[][][]);
+    if (booleanPointInPolygon(pt, multiPolygon)) {
+      console.log(geometry)
+      return geometry as MultiPolygon;
+    }
+  }
+
+  return null;
 }
