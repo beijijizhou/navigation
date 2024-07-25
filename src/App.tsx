@@ -20,7 +20,7 @@ export const App = () => {
   }, [origin])
   return (
     <div style={{ display: 'flex' }}>
-      <APIProvider apiKey={API_KEY}>
+ { origin &&  <APIProvider apiKey={API_KEY}>
         <Map
           style={{ width: '90vw', height: '90vh' }}
           defaultCenter={origin as google.maps.LatLngLiteral}
@@ -29,7 +29,7 @@ export const App = () => {
         />
         <NavigationComponent />
         <UserInputOutput />
-      </APIProvider>
+      </APIProvider>}
       
     </div>
   );

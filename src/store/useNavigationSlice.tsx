@@ -48,10 +48,8 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   geometryArray: undefined,
   setOrigin: async (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-
     const { geometryArray, currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable } = get()
     if (!geometryArray) {
-      console.log(geometryArray)
       const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
       set({ geometryArray: newGeometryArray })
     }
