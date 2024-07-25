@@ -50,8 +50,9 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
     set({ origin: newOrigin })
 
     const { geometryArray, currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable } = get()
-    const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
     if (!geometryArray) {
+      console.log(geometryArray)
+      const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
       set({ geometryArray: newGeometryArray })
     }
 
@@ -64,7 +65,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
       set({ remainingTime, remainingDistance })
       if (distance < 5) {
         const newIndex = stepIndex + 1
-        set({ geometryArray: newGeometryArray })
+
         if (newIndex == legs!.steps.length) {
           set({ navigationServiceStatus: NavigationStatus.Completed })
           return

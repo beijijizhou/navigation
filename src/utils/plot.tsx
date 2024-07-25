@@ -1,5 +1,7 @@
-import { MultiPolygon, LngLatPoint, GeometryType } from "../Type";
+import { MultiPolygon, LngLatPoint, LandmarkType } from "../Type";
 import useStore from "../store";
+import { AdvancedMarker } from '@vis.gl/react-google-maps';
+import { treeURL } from "../assets/icon";
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
 import { Geometry } from "../Type";
 function createMultiPolygonOnMap(coordinates: LngLatPoint[][][]) {
@@ -30,23 +32,25 @@ export const plot = (MultiPolygonArrays: MultiPolygon[]) => {
   MultiPolygonArrays.forEach(MultiPolygon => createMultiPolygonOnMap(MultiPolygon.coordinates))
 }
 
-// export const plotIntersection = async () => {
-//   const { latLngLiteralArray } = useStore.getState();
-//   const WKBstringArray: string[] = await getSidewalkAccessibility(latLngLiteralArray);
-//   const MultiPolygonArrays = WKBArrayToMultiPolygon(WKBstringArray)
-//   // console.log(MultiPolygonArrays)
-//   plot(MultiPolygonArrays)
-// }
-const  createPoints = (geometry: Geometry)=>{
+const createTrees = (geometry: Geometry) => {
 
-}
-export const plotLandmarks = (geometryArray: Geometry[]) => {
-  for (const geometry of geometryArray) {
-    if (geometry.type == GeometryType.MultiPolygon) {
-      createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][])
-    }
-    else{
-      createPoints(geometry)
-    }
+  return (
+    <AdvancedMarker
+      position={{ lat: geometry.coordinates[1] as number, lng: geometry.coordinates[0] as number }}
+    >
+    <img src={treeURL} width={32} height={32} />
+
+    </AdvancedMarker>
+  );
+};
+export const plotLandmarks = (geometry: Geometry) => {
+  switch (geometry.landmarkType) {
+    case LandmarkType.Tree:
+      return createTrees(geometry)
+    default:
+      createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
   }
+  return <div></div>
+
+
 }
