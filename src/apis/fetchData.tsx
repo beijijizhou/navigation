@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { locationType } from '../Type';
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+const url = import.meta.env.VITE_API_URL;
 
-const url = proxyUrl + 'http://34.46.145.148:5000/get-sidewalk-features-in-range';
 // const bmcc = { lat: 40.713536, lng: -74.011223 };
 // const url =  'http://34.46.145.148:5000/get-sidewalk-features-in-range';
 
