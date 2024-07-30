@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MultiPolygon, LngLatPoint,  GeometryType } from "../Type";
+import { MultiPolygon, LngLatPoint,  GeometryType, LandmarkType } from "../Type";
 import useStore from "../store";
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
@@ -54,17 +54,17 @@ export const plotLandmarks = (geometry: Geometry) => {
       return createPoints(geometry)
     default:
       {
-        createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
+        // createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
 
-        // if (geometry.landmarkType == LandmarkType.Sidewalk) {
-        //   console.log(geometry.coordinates)
-          findContainingMultipolygon(geometry)
-        //   if (multipolygon) {
-        //     createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
-        //   }
-        // }
+        if (geometry.landmarkType == LandmarkType.Sidewalk) {
+          const multipolygon = findContainingMultipolygon(geometry)
+         
+          if (multipolygon) {
+            createMultiPolygonOnMap(geometry.coordinates as LngLatPoint[][][]);
+          }
+        }
 
-      }
+  }
 
   }
   return <div></div>

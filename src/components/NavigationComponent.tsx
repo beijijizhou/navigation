@@ -8,12 +8,20 @@ export const NavigationComponent = () => {
     const routesLib = useMapsLibrary('routes');
     const map = useMap();
     const mapsLib = useMapsLibrary('maps');
-    const { origin, destination, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers, navigationServiceStatus, setNavigationServiceStatus } = useStore();
+    const { origin, destination, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers, navigationServiceStatus, setNavigationServiceStatus, setZoomLevel} = useStore();
+
+    
     useEffect(() => {
+        const handleZoomChange = () => {
+            const newZoom = map!.getZoom();
+            
+            setZoomLevel(newZoom!);
+          };
         const initializeMapLibraries = () => {
             if (mapsLib) setMapsLib(mapsLib);
             if (map) {
                 setMap(map);
+                map.addListener('zoom_changed', () => handleZoomChange());
             }
             if (routesLib) {
                 setRoutesLib(routesLib);
@@ -28,15 +36,15 @@ export const NavigationComponent = () => {
             setDirectionsRenderers(new routesLib!.DirectionsRenderer(rendererOptions))
         }
         initializeMapLibraries();
-    }, [mapsLib, map, routesLib, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers]);
+    }, [mapsLib, map, routesLib, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers,setZoomLevel]);
 
     useEffect(() => {
         const startNavigationService = async () => {
             if (!routesLib || !map || !mapsLib) return;
-            console.log(map.getZoom())
+            
             if (navigationServiceStatus == NavigationStatus.NotStarted) {
                 map.setCenter(origin!);
-                map.setZoom(13)
+                // map.setZoom(13)
             }
             if (origin && destination) {
                 if (navigationServiceStatus == NavigationStatus.NotStarted) {
