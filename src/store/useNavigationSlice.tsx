@@ -21,6 +21,7 @@ export interface NavigationSlice {
   remainingTime: string | undefined;
   remainingDistance: number;
   geometryArray: Geometry[] | undefined;
+  manualOrigin:boolean;
   setOrigin: (newOrigin: originLocationType) => void;
   setDestination: (newDestination: locationType) => void;
   setNavigationServiceStatus: (status: NavigationStatus) => void;
@@ -31,6 +32,8 @@ export interface NavigationSlice {
   setRemainingTime: (time: string) => void;
   setRemainingDistance: (distance: number) => void;
   setDistanceToCurrentEndLocation: (distance: number) => void;
+  setManualOrigin: (value:boolean) => void,
+
 }
 
 export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set, get) => ({
@@ -46,6 +49,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   remainingTime: undefined,
   remainingDistance: 0,
   geometryArray: undefined,
+  manualOrigin:true,
   setOrigin: async (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
     const { geometryArray, currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable } = get()
@@ -92,4 +96,6 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   setRemainingDistance: (newDistance: number) => set({ remainingDistance: newDistance }),
 
   setDistanceToCurrentEndLocation: (newDistance: number) => set({ distanceToCurrentEndLocation: newDistance }),
+  setManualOrigin: (value) => set({ manualOrigin: value }),
+
 });

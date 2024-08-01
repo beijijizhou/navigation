@@ -34,6 +34,11 @@ export enum LandmarkType {
   PedestrianRampwayGoodCondition = "Pedestrian Rampway - Good Condition",
   PedestrianRampwayDefective = "Pedestrian Rampway - Defective"
 }
+export enum PedestrianRampwayType {
+  ConditionMissing = LandmarkType.PedestrianRampwayConditionMissing,
+  GoodCondition = LandmarkType.PedestrianRampwayGoodCondition,
+  Defective = LandmarkType.PedestrianRampwayDefective,
+}
 
 export type Geometry = {
   type: GeometryType,
