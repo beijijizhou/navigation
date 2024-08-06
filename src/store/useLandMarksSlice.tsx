@@ -7,11 +7,11 @@ export interface LandMarksSlice {
     currentSideWalks: Geometry | undefined,
     sideWalkGeometryArray: Geometry[] | undefined;
     landMarksGeometryArray: Geometry[] | undefined;
-
+    geometryArray : Geometry[] | undefined;
     setGeometryArray: (newGeometryArray: Geometry[]) => void;
 }
 
-export const createLandMarksSlice: StateCreator<LandMarksSlice & NavigationSlice, [], [], LandMarksSlice> = (set, get) => ({
+export const createLandMarksSlice: StateCreator<LandMarksSlice & NavigationSlice, [], [], LandMarksSlice> = (set) => ({
     currentSideWalks: undefined,
     geometryArray: undefined,
     sideWalkGeometryArray: undefined,

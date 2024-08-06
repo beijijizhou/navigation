@@ -6,7 +6,6 @@ import useStore from "../store";
 import { Feature, Point } from "geojson";
 import turf from "turf";
 import { plotMultiPolygonOnMap } from "./plot";
-import polygonToLine from "@turf/polygon-to-line";
 export const getPolygonPaths = (geometry: Geometry) => {
     const coordinates = geometry.coordinates as LngLatPoint[][][];
 
@@ -49,7 +48,6 @@ export const getCurrentSideWalk = () => {
 }
 export const getLineSegements = (geometry: Geometry) => {
     const coordinates = geometry.coordinates.flat() as unknown as Array<Array<Array<number>>>;
-    let slop;
     for(let i = 1; i < coordinates.length; i++){
         console.log(coordinates)        
         // if(!slop){
@@ -63,9 +61,9 @@ export const convertPolygonToLine = (geometry: Geometry) => {
     const coordinates = geometry.coordinates.flat() as unknown as Array<Array<Array<number>>>;
     console.log(coordinates[0][0])
 
-    const poly1 = [[[125, -30], [145, -30], [145, -20], [125, -20], [125, -30]]]
+    // const poly1 = [[[125, -30], [145, -30], [145, -20], [125, -20], [125, -30]]]
 
-    const poly = turf.polygon(poly1);
+    
 
     const line = turf.polygon(coordinates)
     console.log(line)

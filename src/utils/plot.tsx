@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MultiPolygon, LandmarkType,PedestrianRampwayType } from "../Type";
+import {LandmarkType,PedestrianRampwayType } from "../Type";
 import useStore from "../store";
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
