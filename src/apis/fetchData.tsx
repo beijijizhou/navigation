@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { locationType } from '../Type';
+import { locationType, originLocationType } from '../Type';
 const url = import.meta.env.VITE_API_URL;
 
 // const bmcc = { lat: 40.713536, lng: -74.011223 };
@@ -21,9 +21,9 @@ export const getSidewalkAccessibility = async (linePoints: locationType[]) => {
   }
 };
 
-export const getSidewalkFeaturesInRange = async (currentPosition: google.maps.LatLngLiteral) => {
+export const getSidewalkFeaturesInRange = async (currentPosition: originLocationType) => {
   try {
-    const { lat, lng } = currentPosition;
+    const { lat, lng } = currentPosition as google.maps.LatLngLiteral;
     const km_distance = 0.100; // You can adjust the distance as needed
     const requestedUrl = `${url}?focal_lat=${lat}&focal_lon=${lng}&km_distance=${km_distance}`;
     const response = await axios.get(requestedUrl);

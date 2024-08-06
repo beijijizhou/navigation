@@ -52,7 +52,7 @@ const sideWalkTest = () => {
   setManualOrigin(true);
   setOrigin(homeFront);
   
-  console.log(latLngLiteralArray)
+ 
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call

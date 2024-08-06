@@ -8,7 +8,7 @@ import { calculateDistanceToCurrentEndLocation, getEndLocation } from '../../uti
 import textToSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
-  const { distanceToCurrentEndLocation, remainingTime, setRemainingTime, setDistanceToCurrentEndLocation, remainingDistance,setRemainingDistance } = useStore.getState();
+  const { distanceToCurrentEndLocation, remainingTime, setRemainingTime, setDistanceToCurrentEndLocation, remainingDistance, setRemainingDistance } = useStore.getState();
   const endService = "Your Destination Has arrrived"
 
   const extractInstructions = (text: string) => {
@@ -24,7 +24,7 @@ export default function Broadcast() {
       const time = currentDirectionsRoute.legs[0].duration
       setRemainingTime(time!.text)
     }
-    if(!remainingDistance){
+    if (!remainingDistance) {
       const d = currentDirectionsRoute.legs[0].distance!.value
       setRemainingDistance(d)
     }
@@ -40,7 +40,7 @@ export default function Broadcast() {
       const distance = calculateDistanceToCurrentEndLocation(endLocation, origin as google.maps.LatLngLiteral)
       setDistanceToCurrentEndLocation(distance)
     }
-  }, [currentDirectionsRoute, remainingDistance,setRemainingDistance,distanceToCurrentEndLocation, setDistanceToCurrentEndLocation, setEndLocation, setLegs, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus, remainingTime, setRemainingTime])
+  }, [currentDirectionsRoute, remainingDistance, setRemainingDistance, distanceToCurrentEndLocation, setDistanceToCurrentEndLocation, setEndLocation, setLegs, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus, remainingTime, setRemainingTime])
 
   const prevInstructions = useRef('')
 
@@ -62,7 +62,7 @@ export default function Broadcast() {
         <div>
           <p style={{ fontSize: '12px' }}>
             BoardCast: <br />
-            Distantce: { Math.round(remainingDistance / 10) * 10 } meters<br />
+            Distantce: {Math.round(remainingDistance / 10) * 10} meters<br />
             Time: {remainingTime}<br />
           </p>
           <p style={{ fontSize: '12px' }}>
@@ -83,7 +83,7 @@ export default function Broadcast() {
             />
           </AdvancedMarker>}
           {navigationServiceStatus == NavigationStatus.Completed && <p>{endService} </p>}
-          
+
         </div>
       )}
     </div>

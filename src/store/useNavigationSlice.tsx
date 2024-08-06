@@ -1,8 +1,11 @@
 
 import { StateCreator } from 'zustand';
-import { locationType, originLocationType, LookUpTableType, Geometry } from '../Type';
+import { locationType, originLocationType, LookUpTableType } from '../Type';
 import * as NavigationUtils from '../utils/navigationUtil/navigation';
 import { getSidewalkFeaturesInRange } from '../apis/fetchData';
+import { LandMarksSlice } from './useLandMarksSlice';
+
+// import { isPointInMultiPolygon } from '../utils/geometryUtil';
 export enum NavigationStatus {
   NotStarted = 'not started',
   InProgress = 'in progress',
@@ -20,8 +23,8 @@ export interface NavigationSlice {
   distanceTable: Array<number> | undefined;
   remainingTime: string | undefined;
   remainingDistance: number;
-  geometryArray: Geometry[] | undefined;
-  manualOrigin:boolean;
+
+  manualOrigin: boolean;
   setOrigin: (newOrigin: originLocationType) => void;
   setDestination: (newDestination: locationType) => void;
   setNavigationServiceStatus: (status: NavigationStatus) => void;
@@ -32,11 +35,11 @@ export interface NavigationSlice {
   setRemainingTime: (time: string) => void;
   setRemainingDistance: (distance: number) => void;
   setDistanceToCurrentEndLocation: (distance: number) => void;
-  setManualOrigin: (value:boolean) => void,
+  setManualOrigin: (value: boolean) => void,
 
 }
 
-export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set, get) => ({
+export const createNavigationSlice: StateCreator<NavigationSlice & LandMarksSlice, [], [], NavigationSlice> = (set, get) => ({
   origin: null,
   destination: "",
   stepIndex: 0,
@@ -48,16 +51,21 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
   distanceTable: undefined,
   remainingTime: undefined,
   remainingDistance: 0,
-  geometryArray: undefined,
-  manualOrigin:true,
+
+  manualOrigin: true,
   setOrigin: async (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-    const { geometryArray, currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable } = get()
-    if (!geometryArray) {
+    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable, setGeometryArray } = get()
+    const { sideWalkGeometryArray } = get()
+      
+      
+    console.log(!sideWalkGeometryArray)
+    if (!sideWalkGeometryArray) {
+      
       const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
-      set({ geometryArray: newGeometryArray })
+      setGeometryArray( newGeometryArray )
     }
-
+    
     if (currentEndLocation && NavigationStatus.InProgress) {
       const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
       setDistanceToCurrentEndLocation(distance)
@@ -67,12 +75,10 @@ export const createNavigationSlice: StateCreator<NavigationSlice, [], []> = (set
       set({ remainingTime, remainingDistance })
       if (distance < 5) {
         const newIndex = stepIndex + 1
-
         if (newIndex == legs!.steps.length) {
           set({ navigationServiceStatus: NavigationStatus.Completed })
           return
         }
-
         const currentEndLocation = NavigationUtils.getEndLocation(legs!, newIndex)
         set({ currentEndLocation, stepIndex: newIndex, })
       }

@@ -1,9 +1,12 @@
 import { create } from 'zustand';
 import { createNavigationSlice, NavigationSlice } from './useNavigationSlice';
 import { GoogleMapsSlice, createGoogleMapsSlice } from './useGoogleMapsSlice';
-const useStore = create<NavigationSlice & GoogleMapsSlice>()((...a) => ({
+import { LandMarksSlice, createLandMarksSlice } from './useLandMarksSlice';
+
+const useStore = create<NavigationSlice & GoogleMapsSlice & LandMarksSlice>()((...a) => ({
   ...createNavigationSlice(...a),
-  ...createGoogleMapsSlice(...a)
+  ...createGoogleMapsSlice(...a),
+  ...createLandMarksSlice(...a),
 }))
 export default useStore;
 

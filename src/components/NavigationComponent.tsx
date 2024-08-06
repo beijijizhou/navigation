@@ -8,7 +8,8 @@ export const NavigationComponent = () => {
     const routesLib = useMapsLibrary('routes');
     const map = useMap();
     const mapsLib = useMapsLibrary('maps');
-    const { origin, destination, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers, navigationServiceStatus, setNavigationServiceStatus, setZoomLevel} = useStore();
+    const markerLib = useMapsLibrary('marker');
+    const { origin, destination, setDirectionsRenderers, navigationServiceStatus, setNavigationServiceStatus, setZoomLevel} = useStore();
 
     
     useEffect(() => {
@@ -18,16 +19,17 @@ export const NavigationComponent = () => {
             setZoomLevel(newZoom!);
           };
         const initializeMapLibraries = () => {
-            if (mapsLib) setMapsLib(mapsLib);
+            
             if (map) {
-                setMap(map);
+                useStore.setState({map:map});
                 map.addListener('zoom_changed', () => handleZoomChange());
             }
             if (routesLib) {
-                setRoutesLib(routesLib);
+                useStore.setState({routesLib:routesLib});
                 initializeDirectionRender();
             }
-
+            mapsLib && useStore.setState({mapsLib:mapsLib});
+            markerLib && useStore.setState({markerLib:markerLib});
         };
         const initializeDirectionRender = () => {
             const rendererOptions = {
@@ -36,7 +38,7 @@ export const NavigationComponent = () => {
             setDirectionsRenderers(new routesLib!.DirectionsRenderer(rendererOptions))
         }
         initializeMapLibraries();
-    }, [mapsLib, map, routesLib, setMapsLib, setMap, setRoutesLib, setDirectionsRenderers,setZoomLevel]);
+    }, [mapsLib, map, routesLib, markerLib, setDirectionsRenderers,setZoomLevel]);
 
     useEffect(() => {
         const startNavigationService = async () => {
@@ -54,7 +56,7 @@ export const NavigationComponent = () => {
             }
         };
         startNavigationService();
-    }, [routesLib, map, mapsLib, setMap, origin, destination, navigationServiceStatus, setNavigationServiceStatus]);
+    }, [routesLib, map, mapsLib, origin, destination, navigationServiceStatus, setNavigationServiceStatus]);
 
 
 
