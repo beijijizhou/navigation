@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import useStore from '../../store';
 import { AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
 import { NavigationStatus } from '../../store/useNavigationSlice';
-import { calculateDistanceToCurrentEndLocation, getEndLocation } from '../../utils/navigationUtil/navigation';
+import { calculateDistanceBetweenPoints, getEndLocation } from '../../utils/navigationUtil/navigation';
 import textToSpeech from '../../utils/txtToSpeech.tsx'
 export default function Broadcast() {
   const { currentDirectionsRoute, origin, setNavigationServiceStatus, navigationServiceStatus, stepIndex, legs, setLegs, currentEndLocation: endLocation, setCurrentEndLocation: setEndLocation } = useStore.getState();
@@ -37,7 +37,7 @@ export default function Broadcast() {
       return
     }
     if (!distanceToCurrentEndLocation) {
-      const distance = calculateDistanceToCurrentEndLocation(endLocation, origin as google.maps.LatLngLiteral)
+      const distance = calculateDistanceBetweenPoints(endLocation, origin as google.maps.LatLngLiteral)
       setDistanceToCurrentEndLocation(distance)
     }
   }, [currentDirectionsRoute, remainingDistance,setRemainingDistance,distanceToCurrentEndLocation, setDistanceToCurrentEndLocation, setEndLocation, setLegs, origin, endLocation, legs, stepIndex, setNavigationServiceStatus, navigationServiceStatus, remainingTime, setRemainingTime])

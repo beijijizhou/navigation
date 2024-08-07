@@ -41,19 +41,33 @@ const dynamicallyRunTest = () => {
   });
 }
 const staticallyRunTest = () => {
-  it('statically run', () => {
-    mount(<App />);
-    cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
-    console.log("runs before")
-    const { setOrigin, setDestination } = useStore.getState();
-    // setOrigin(bmcc)
-    setDestination(neighbor);
-  });
+
+  const { setDestination } = useStore.getState();
+  // setOrigin(bmcc)
+  setDestination(neighbor);
+
+}
+const sideWalkTest = () => {
+  const { setOrigin, setManualOrigin,latLngLiteralArray } = useStore.getState();
+  setManualOrigin(true);
+  setOrigin(bmcc);
+  
+ 
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
-  dynamicallyRunTest();
-  // staticallyRunTest();
+  const { setZoomLevel } = useStore.getState();
+  it('test run', () => {
+    mount(<App />);
+    const viewPortWidth = 700;
+    cy.viewport(viewPortWidth, viewPortWidth) 
+    cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
+    // dynamicallyRunTest();
+    // staticallyRunTest();
+    setZoomLevel(17)
+    sideWalkTest();
+  });
+
 
 });
 

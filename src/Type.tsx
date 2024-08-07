@@ -37,4 +37,22 @@ export type Geometry = {
   landmarkType: LandmarkType,
   coordinates: [Lng, Lat] | LngLatPoint[][][],
 }
+export const CornerDistance = 0.0004;
+export enum ColorHexCodes {
+  Red = '#FF0000',
+  Green = '#00FF00',
+  Blue = '#0000FF',
+  Yellow = '#FFFF00',
+  Cyan = '#00FFFF',
+  Magenta = '#FF00FF',
+  Black = '#000000',
+  White = '#FFFFFF',
+  Gray = '#808080',
+  Orange = '#FFA500',
+  Purple = '#800080',
+  Pink = '#FFC0CB',
+  Brown = '#A52A2A',
+  LightBlue = '#ADD8E6',
+  LightGreen = '#90EE90',
+}
 
