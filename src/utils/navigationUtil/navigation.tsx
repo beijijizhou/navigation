@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as turf from "@turf/turf";
-import { LookUpTableType } from "../../Type";
+import { LngLatPoint, LookUpTableType } from "../../Type";
+import { point } from "turf";
 
-export const calculateDistanceToCurrentEndLocation = (endLocation: google.maps.LatLngLiteral, origin: google.maps.LatLngLiteral) => {
+export const calculateDistanceBetweenPoints = (endLocation: google.maps.LatLngLiteral, origin: google.maps.LatLngLiteral) => {
   const currentPoint = turf.point([origin.lng, origin.lat]);
   const endPoint = turf.point([endLocation.lng, endLocation.lat]);
   const d = turf.distance(currentPoint, endPoint)
@@ -10,6 +11,10 @@ export const calculateDistanceToCurrentEndLocation = (endLocation: google.maps.L
   const roundedDistance = Math.round(d * 1000 / 10) * 10;
   return roundedDistance
 }
+export const distanceInTurf = (pt1:LngLatPoint, pt2:LngLatPoint)=>{
+  return turf.distance(turf.point(pt1), turf.point(pt2));
+}
+
 
 export const calculateDurationToCurrentEndLocation = (distanceInMeters: number): number => {
   const averageWalkingSpeedMetersPerSecond = 1.4; // average walking speed in meters per second
@@ -34,7 +39,7 @@ export const createLookUpTable = (leg: google.maps.DirectionsLeg, type: string) 
     }
     else {
       duration += leg.steps[i].distance!.value;
-      
+
     }
     lookUpTable[i] = duration
   }

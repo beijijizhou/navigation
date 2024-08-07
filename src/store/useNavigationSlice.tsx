@@ -57,17 +57,14 @@ export const createNavigationSlice: StateCreator<NavigationSlice & LandMarksSlic
     set({ origin: newOrigin })
     const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable, setGeometryArray } = get()
     const { sideWalkGeometryArray } = get()
-      
-      
-    console.log(!sideWalkGeometryArray)
     if (!sideWalkGeometryArray) {
-      
+
       const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
-      setGeometryArray( newGeometryArray )
+      setGeometryArray(newGeometryArray)
     }
-    
+
     if (currentEndLocation && NavigationStatus.InProgress) {
-      const distance = NavigationUtils.calculateDistanceToCurrentEndLocation(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
+      const distance = NavigationUtils.calculateDistanceBetweenPoints(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
       setDistanceToCurrentEndLocation(distance)
       const seconds = NavigationUtils.calculateDurationToCurrentEndLocation(distance);
       const remainingTime = NavigationUtils.convertTime(NavigationUtils.calculateRemaining(stepIndex, seconds, durationTable!))

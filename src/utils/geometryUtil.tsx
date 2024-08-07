@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import booleanIntersects from "@turf/boolean-intersects";
-import { originLocationType, Geometry, LngLatPoint, } from "../Type";
+import { originLocationType, Geometry, LngLatPoint, CornerDistance, ColorHexCodes, } from "../Type";
 import useStore from "../store";
 import { Feature, Point } from "geojson";
-import turf from "turf";
-import { plotMultiPolygonOnMap } from "./plot";
+import * as turf from "@turf/turf";
+import lineIntersect from "@turf/line-intersect";
+import { plotSideWalk, plotMultiPolygonOnMap, plotMarker, plotSideWalkInMarkers, plotAllSideWalkInMarkers } from "./plot";
+import { lineToPolygon } from "@turf/line-to-polygon";
+import { distanceInTurf } from "./navigationUtil/navigation";
+
 export const getPolygonPaths = (geometry: Geometry) => {
     const coordinates = geometry.coordinates as LngLatPoint[][][];
 
@@ -35,39 +39,86 @@ export const isPointInMultiPolygon = (point: originLocationType, geometry: Geome
 };
 export const getCurrentSideWalk = () => {
     const { origin, sideWalkGeometryArray } = useStore.getState()
-    
+
     for (const geometry of sideWalkGeometryArray!) {
         // console.log(geometry.coordinates)
+
         if (isPointInMultiPolygon(origin, geometry)) {
-            plotMultiPolygonOnMap(geometry);
+            // plotMultiPolygonOnMap(geometry);
             getLineSegements(geometry)
-            
-            return geometry
+            // plotAllSideWalkInMarkers(geometry.coordinates[0] as LngLatPoint[][])
+
         }
     }
 }
-export const getLineSegements = (geometry: Geometry) => {
-    const coordinates = geometry.coordinates.flat() as unknown as Array<Array<Array<number>>>;
-    for(let i = 1; i < coordinates.length; i++){
-        console.log(coordinates)        
-        // if(!slop){
-            
-        //     slop =  
-        // }
+const normalizedCoordinates = (coordinates: LngLatPoint[]) => {
+    for (let i = 1; i < coordinates.length; i++) {
+        if (distanceInTurf(coordinates[i - 1], coordinates[i]) < CornerDistance) {
+            return [...coordinates.slice(i), ...coordinates.slice(0, i)];
+        }
     }
+    return coordinates;
 }
-export const convertPolygonToLine = (geometry: Geometry) => {
-    // console.log(geometry.coordinates )
-    const coordinates = geometry.coordinates.flat() as unknown as Array<Array<Array<number>>>;
-    console.log(coordinates[0][0])
+export const getLineSegements = (geometry: Geometry) => {
+    const coordinatesArray = geometry.coordinates as LngLatPoint[][][];
+    const coordinates = normalizedCoordinates(coordinatesArray[0][0])
+    // plotSideWalkInMarkers(coordinates)
+    let currentSegment: LngLatPoint[] = []
+    let corner: LngLatPoint[] = []
+    const segments: LngLatPoint[][] = [];
+    for (let i = 0; i < coordinates.length - 1; i++) {
+        const d = distanceInTurf(coordinates[i], coordinates[i + 1])
 
-    // const poly1 = [[[125, -30], [145, -30], [145, -20], [125, -20], [125, -30]]]
+        if (d <= CornerDistance) { // meeting the corner
 
-    
+            if (currentSegment.length > 3) { // append the previous segment to array
+                console.log("meet corner")
+                segments.push(currentSegment)
+            }
+            currentSegment = []
+            corner.push(coordinates[i]) //adding corner points
+        }
 
-    const line = turf.polygon(coordinates)
-    console.log(line)
-    return
+        else {
+
+            if (corner.length > 3) { // come out of corner, and start to meet the regular sidewalk
+
+                // if (corner.length > 2) {
+
+
+
+                // }  
+                console.log("finish corner", corner)
+                currentSegment = [...corner];
+                plotMarker(coordinates[i])
+                corner = [];
+
+
+
+            }
+            currentSegment.push(coordinates[i])
+        }
+
+
+    }
+
+    console.log(segments.length)
+    // if (currentSegment.length > 3) {
+    //     segments.push(currentSegment)
+    // }
+    // if (corner.length > 3) {
+    //     segments[segments.length - 1] = [...segments[segments.length - 1], ...corner]
+    // }
+    // const i = 1
+    //  plotSideWalkInMarkers(segments[i])
+    //  plotSideWalkInMarkers(segments[i + 1])
+    // plotAllSideWalkInMarkers(segments)
+}
+export const getIntersectedSideWalk = (lineSegment: LngLatPoint[], point: originLocationType) => {
+    const line1 = turf.lineString(lineSegment);
+    const polygon = lineToPolygon(line1);
+
+    return booleanIntersects(convertPointToBuffer(point), polygon);
 }
 const convertPointToBuffer = (point: originLocationType) => {
     const { map } = useStore.getState()

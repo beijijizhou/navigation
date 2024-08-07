@@ -50,17 +50,21 @@ const staticallyRunTest = () => {
 const sideWalkTest = () => {
   const { setOrigin, setManualOrigin,latLngLiteralArray } = useStore.getState();
   setManualOrigin(true);
-  setOrigin(homeFront);
+  setOrigin(bmcc);
   
  
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
+  const { setZoomLevel } = useStore.getState();
   it('test run', () => {
     mount(<App />);
+    const viewPortWidth = 700;
+    cy.viewport(viewPortWidth, viewPortWidth) 
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     // dynamicallyRunTest();
     // staticallyRunTest();
+    setZoomLevel(17)
     sideWalkTest();
   });
 
