@@ -1,0 +1,5 @@
+#__cy_root .runner, 
+#__cy_root .command-log, 
+#__cy_root .resizer {
+  display: none !important;
+}
