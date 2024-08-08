@@ -12,7 +12,10 @@ export const goldenDinner = { lat: 40.7284405, lng: -74.0 };
 export const home = { lat: 40.7898531, lng: -73.8078768 }
 // const crossStreet = { lat: 40.7898507, lng: -73.807 };
 export const neighbor = { lat: 40.7919567, lng: -73.8173405 }
-export const homeFront = {lat: 40.789840000000005, lng: -73.80768}
+export const homeFront = { lat: 40.789840000000005, lng: -73.80768 }
+export const onefourst = { lat: 40.737370, lng: -73.997566 }
+export const seven = {lat: 40.741588, lng:-73.997595}
+
 const dynamicallyRunTest = () => {
 
   const { setDestination } = useStore.getState();
@@ -36,7 +39,7 @@ const dynamicallyRunTest = () => {
       console.log(position)
     }
   };
-  
+
   const intervalID = setInterval(setLocation, 5000);
 
 }
@@ -48,11 +51,11 @@ const staticallyRunTest = () => {
 
 }
 const sideWalkTest = () => {
-  const { setOrigin, setManualOrigin,latLngLiteralArray } = useStore.getState();
+  const { setOrigin, setManualOrigin, latLngLiteralArray } = useStore.getState();
   setManualOrigin(true);
+  // setOrigin(seven);
   setOrigin(bmcc);
-  
- 
+
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
@@ -60,7 +63,7 @@ describe('PositionMarker Component', () => {
   it('test run', () => {
     mount(<App />);
     const viewPortWidth = 700;
-    cy.viewport(viewPortWidth, viewPortWidth) 
+    cy.viewport(viewPortWidth, viewPortWidth)
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
     // dynamicallyRunTest();
     // staticallyRunTest();

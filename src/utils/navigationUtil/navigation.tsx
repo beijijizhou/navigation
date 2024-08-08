@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as turf from "@turf/turf";
 import { LngLatPoint, LookUpTableType } from "../../Type";
-import { point } from "turf";
 
 export const calculateDistanceBetweenPoints = (endLocation: google.maps.LatLngLiteral, origin: google.maps.LatLngLiteral) => {
   const currentPoint = turf.point([origin.lng, origin.lat]);

@@ -12,8 +12,8 @@ export enum LookUpTableType {
 }
 
 export type WKBStringArray = [wkb: string, type: string];
-type Lng = number;
-type Lat = number;
+export type Lng = number;
+export type Lat = number;
 export enum GeometryType {
   Point = "Point",
   MultiPolygon = "MultiPolygon"
@@ -43,9 +43,10 @@ export enum PedestrianRampwayType {
 export type Geometry = {
   type: GeometryType,
   landmarkType: LandmarkType,
-  coordinates: [Lng, Lat] | LngLatPoint[][][],
+  coordinates: LngLatPoint[][][],
 }
 export const CornerDistance = 0.0004;
+export const CornerLength = 10;
 export enum ColorHexCodes {
   Red = '#FF0000',
   Green = '#00FF00',

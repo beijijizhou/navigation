@@ -6,7 +6,6 @@ import { AdvancedMarker } from '@vis.gl/react-google-maps';
 import { landmarkURLMap } from "../assets/icon";
 import { Geometry } from "../Type";
 import { getPolygonPaths, isPointInMultiPolygon } from "./geometryUtil";
-import { distanceInTurf } from "./navigationUtil/navigation";
 export const plotMultiPolygonOnMap = (geometry: Geometry) => {
   const { map, mapsLib } = useStore.getState();
   const polygonPaths = getPolygonPaths(geometry)
@@ -32,7 +31,7 @@ export const plotMarker = (point: LngLatPoint, color?: string) => {
     background: color || ColorHexCodes.Red,
     borderColor: color || ColorHexCodes.Red,
   });
-  const marker = new markerLib!.AdvancedMarkerElement({
+  new markerLib!.AdvancedMarkerElement({
     map: map!,
     position: pt,
     content: pin.element
@@ -44,18 +43,14 @@ export const plotSideWalkInMarkers = async (coordinates: LngLatPoint[]) => {
 
   for (let i = 0; i < coordinates.length; i++) {
     const coordinate = coordinates[i];
-    if (i > 0) {
-      const d = distanceInTurf(coordinates[i], coordinates[i - 1]);
-
-    }
     plotMarker(coordinate)
-    // await delay(100); 
+    await delay(100); 
   }
 }
 export const plotAllSideWalkInMarkers = async (segements: LngLatPoint[][]) => {
   for (const segement of segements) {
     plotSideWalkInMarkers(segement);
-
+    console.log("1")
     await delay(1000);
   }
 }
@@ -75,12 +70,13 @@ export const plotSideWalk = (lineSegment: LngLatPoint[]) => {
 
 const createPoints = (geometry: Geometry) => {
   const url = landmarkURLMap[geometry.landmarkType];
+
   if (url == "") {
     // console.log(geometry.landmarkType)
   }
   return (
     <AdvancedMarker
-      position={{ lat: geometry.coordinates[1] as number, lng: geometry.coordinates[0] as number }}
+      position={{ lat: geometry.coordinates[1] as unknown as number, lng: geometry.coordinates[0] as unknown as number}}
     >
       <img src={url} width={32} height={32} />
     </AdvancedMarker>

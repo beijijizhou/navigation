@@ -2,9 +2,9 @@
 import { StateCreator } from 'zustand';
 import { Geometry, LandmarkType } from '../Type';
 import { NavigationSlice } from './useNavigationSlice';
-import { getCurrentSideWalk } from '../utils/geometryUtil';
+import { getCurrentSideWalk as getBlockSideWalk } from '../utils/geometryUtil';
 export interface LandMarksSlice {
-    currentSideWalks: Geometry | undefined,
+    blockSideWalks: Geometry | undefined,
     sideWalkGeometryArray: Geometry[] | undefined;
     landMarksGeometryArray: Geometry[] | undefined;
     geometryArray : Geometry[] | undefined;
@@ -12,7 +12,7 @@ export interface LandMarksSlice {
 }
 
 export const createLandMarksSlice: StateCreator<LandMarksSlice & NavigationSlice, [], [], LandMarksSlice> = (set) => ({
-    currentSideWalks: undefined,
+    blockSideWalks: undefined,
     geometryArray: undefined,
     sideWalkGeometryArray: undefined,
     landMarksGeometryArray: undefined,
@@ -29,10 +29,10 @@ export const createLandMarksSlice: StateCreator<LandMarksSlice & NavigationSlice
         }
 
         set({ sideWalkGeometryArray: newSideWalkGeometryArray, landMarksGeometryArray: newlandMarksGeometryArray });
-        const currentSideWalks = getCurrentSideWalk()
+        const blockSideWalks = getBlockSideWalk()
         
-        if (currentSideWalks) {
-            set({ currentSideWalks: currentSideWalks })
+        if (!blockSideWalks) {
+            set({ blockSideWalks: blockSideWalks })
         }
     },
 

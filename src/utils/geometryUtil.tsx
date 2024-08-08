@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import booleanIntersects from "@turf/boolean-intersects";
-import { originLocationType, Geometry, LngLatPoint, CornerDistance, ColorHexCodes, } from "../Type";
+import { originLocationType, Geometry, LngLatPoint, CornerDistance, } from "../Type";
 import useStore from "../store";
 import { Feature, Point } from "geojson";
 import * as turf from "@turf/turf";
-import lineIntersect from "@turf/line-intersect";
-import { plotSideWalk, plotMultiPolygonOnMap, plotMarker, plotSideWalkInMarkers, plotAllSideWalkInMarkers } from "./plot";
+import { plotSideWalk } from "./plot";
 import { lineToPolygon } from "@turf/line-to-polygon";
 import { distanceInTurf } from "./navigationUtil/navigation";
 
@@ -45,8 +44,11 @@ export const getCurrentSideWalk = () => {
 
         if (isPointInMultiPolygon(origin, geometry)) {
             // plotMultiPolygonOnMap(geometry);
-            getLineSegements(geometry)
-            // plotAllSideWalkInMarkers(geometry.coordinates[0] as LngLatPoint[][])
+
+            return getLineSegements(geometry)
+
+            // console.log(geometry.coordinates)
+            // plotSideWalkInMarkers(geometry.coordinates[0][0] as LngLatPoint[])
 
         }
     }
@@ -60,60 +62,31 @@ const normalizedCoordinates = (coordinates: LngLatPoint[]) => {
     return coordinates;
 }
 export const getLineSegements = (geometry: Geometry) => {
+
     const coordinatesArray = geometry.coordinates as LngLatPoint[][][];
     const coordinates = normalizedCoordinates(coordinatesArray[0][0])
     // plotSideWalkInMarkers(coordinates)
-    let currentSegment: LngLatPoint[] = []
+
     let corner: LngLatPoint[] = []
-    const segments: LngLatPoint[][] = [];
+    const segments: LngLatPoint[] = [];
     for (let i = 0; i < coordinates.length - 1; i++) {
         const d = distanceInTurf(coordinates[i], coordinates[i + 1])
-
-        if (d <= CornerDistance) { // meeting the corner
-
-            if (currentSegment.length > 3) { // append the previous segment to array
-                console.log("meet corner")
-                segments.push(currentSegment)
-            }
-            currentSegment = []
-            corner.push(coordinates[i]) //adding corner points
+        if (d < CornerDistance) {
+            corner.push(coordinates[i]);
         }
-
         else {
-
-            if (corner.length > 3) { // come out of corner, and start to meet the regular sidewalk
-
-                // if (corner.length > 2) {
-
-
-
-                // }  
-                console.log("finish corner", corner)
-                currentSegment = [...corner];
-                plotMarker(coordinates[i])
-                corner = [];
-
-
-
+            if (corner.length > 10) {
+                const mid = Math.floor(corner.length / 2);
+                segments.push(corner[mid])
+                corner = []
             }
-            currentSegment.push(coordinates[i])
         }
-
-
     }
-
-    console.log(segments.length)
-    // if (currentSegment.length > 3) {
-    //     segments.push(currentSegment)
-    // }
-    // if (corner.length > 3) {
-    //     segments[segments.length - 1] = [...segments[segments.length - 1], ...corner]
-    // }
-    // const i = 1
-    //  plotSideWalkInMarkers(segments[i])
-    //  plotSideWalkInMarkers(segments[i + 1])
-    // plotAllSideWalkInMarkers(segments)
+    segments.push(segments[0])
+    plotSideWalk(segments)
+    return segments
 }
+
 export const getIntersectedSideWalk = (lineSegment: LngLatPoint[], point: originLocationType) => {
     const line1 = turf.lineString(lineSegment);
     const polygon = lineToPolygon(line1);
