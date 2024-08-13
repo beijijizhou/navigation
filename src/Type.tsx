@@ -45,8 +45,10 @@ export type Geometry = {
   landmarkType: LandmarkType,
   coordinates: LngLatPoint[][][],
 }
-export const CornerDistance = 0.0004;
-export const CornerLength = 10;
+export const CornerDistance = 0.0006;
+export const CornerLength = 20;
+export const CollisionRadius = 0.005;
+export const SlopeDifference = 1;
 export enum ColorHexCodes {
   Red = '#FF0000',
   Green = '#00FF00',

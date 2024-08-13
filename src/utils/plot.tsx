@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LandmarkType, PedestrianRampwayType, LngLatPoint, ColorHexCodes } from "../Type";
+import { LandmarkType, PedestrianRampwayType, LngLatPoint} from "../Type";
 import useStore from "../store";
-import { AdvancedMarker } from '@vis.gl/react-google-maps';
+import { AdvancedMarker} from '@vis.gl/react-google-maps';
 // import { WKBArrayToMultiPolygon } from '../utils/readWKB';
 import { landmarkURLMap } from "../assets/icon";
 import { Geometry } from "../Type";
@@ -24,34 +24,42 @@ export const plotMultiPolygonOnMap = (geometry: Geometry) => {
     newPolygon.setMap(map);
   });
 }
-export const plotMarker = (point: LngLatPoint, color?: string) => {
+export const plotMarker = async (point: LngLatPoint) => {
   const { map, markerLib } = useStore.getState();
   const pt = { lat: point[1], lng: point[0] };
-  const pin = new markerLib!.PinElement({
-    background: color || ColorHexCodes.Red,
-    borderColor: color || ColorHexCodes.Red,
-  });
+  // const pin = new markerLib!.PinElement({
+  //   background: color || ColorHexCodes.Red,
+  //   borderColor: color || ColorHexCodes.Red,
+  // });
   new markerLib!.AdvancedMarkerElement({
     map: map!,
     position: pt,
-    content: pin.element
+    // content: pin.element,
+    title: "Title text for the marker at lat: 37.419, lng: -122.03",
+    // onClick:   
   })
+  // const { AdvancedMarkerElement,Marker } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+  // const marker = new Marker({
+  //   map: map,
+  //   position: pt,
+  //   title: 'Uluru'
+  // });
 }
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const plotSideWalkInMarkers = async (coordinates: LngLatPoint[]) => {
 
   for (let i = 0; i < coordinates.length; i++) {
     const coordinate = coordinates[i];
     plotMarker(coordinate)
-    await delay(100); 
+    // await delay(100); 
   }
 }
 export const plotAllSideWalkInMarkers = async (segements: LngLatPoint[][]) => {
   for (const segement of segements) {
     plotSideWalkInMarkers(segement);
-    console.log("1")
-    await delay(1000);
+    
+    await delay(100);
   }
 }
 export const plotSideWalk = (lineSegment: LngLatPoint[]) => {
