@@ -1,8 +1,7 @@
 
 import { StateCreator } from 'zustand';
-import { locationType, originLocationType, LookUpTableType } from '../Type';
+import { locationType, originLocationType, LookUpTableType, UpdateDistance } from '../Type';
 import * as NavigationUtils from '../utils/navigationUtil/navigation';
-import { getSidewalkFeaturesInRange } from '../apis/fetchData';
 import { LandMarksSlice } from './useLandMarksSlice';
 
 // import { isPointInMultiPolygon } from '../utils/geometryUtil';
@@ -55,14 +54,9 @@ export const createNavigationSlice: StateCreator<NavigationSlice & LandMarksSlic
   manualOrigin: true,
   setOrigin: async (newOrigin: originLocationType) => {
     set({ origin: newOrigin })
-    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable, setGeometryArray } = get()
-    const { sideWalkGeometryArray } = get()
-    if (!sideWalkGeometryArray) {
-
-      const newGeometryArray = await getSidewalkFeaturesInRange(newOrigin as google.maps.LatLngLiteral)
-      setGeometryArray(newGeometryArray)
-    }
-
+    const { currentEndLocation, durationTable, stepIndex, legs, setDistanceToCurrentEndLocation, distanceTable, } = get()
+    const { updateLandmarks } = get()
+    await updateLandmarks(newOrigin)
     if (currentEndLocation && NavigationStatus.InProgress) {
       const distance = NavigationUtils.calculateDistanceBetweenPoints(currentEndLocation, newOrigin as google.maps.LatLngLiteral);
       setDistanceToCurrentEndLocation(distance)
@@ -70,7 +64,7 @@ export const createNavigationSlice: StateCreator<NavigationSlice & LandMarksSlic
       const remainingTime = NavigationUtils.convertTime(NavigationUtils.calculateRemaining(stepIndex, seconds, durationTable!))
       const remainingDistance = NavigationUtils.calculateRemaining(stepIndex, seconds, distanceTable!)
       set({ remainingTime, remainingDistance })
-      if (distance < 5) {
+      if (distance < UpdateDistance) {
         const newIndex = stepIndex + 1
         if (newIndex == legs!.steps.length) {
           set({ navigationServiceStatus: NavigationStatus.Completed })

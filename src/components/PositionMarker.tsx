@@ -5,7 +5,6 @@ import { AdvancedMarker, Pin} from '@vis.gl/react-google-maps';
 import useStore from '../store';
 import Broadcast from './Broadcast/Broadcast';
 import { originURL } from '../assets/icon';
-import PlotGeometry from './Broadcast/PlotGeometry';
 export const PositionMarker = () => {
     const { origin, map, setOrigin, manualOrigin} = useStore((state) => state);
 
@@ -95,7 +94,6 @@ export const PositionMarker = () => {
                     )
                     : <p></p>}
             </h1>
-            <PlotGeometry></PlotGeometry>
           
         </div>
 

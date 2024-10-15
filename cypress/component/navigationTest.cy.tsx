@@ -18,8 +18,9 @@ export const seven = {lat: 40.741588, lng:-73.997595}
 
 const dynamicallyRunTest = () => {
 
-  const { setDestination } = useStore.getState();
-  setDestination(neighbor);
+  const { setDestination,setOrigin } = useStore.getState();
+  setOrigin(bmcc);
+  setDestination(goldenDinner);
   let index = -1;
   const nextPosition = (index: number, latLngLiteralArray: google.maps.LatLngLiteral[]) => {
     index++;
@@ -31,31 +32,31 @@ const dynamicallyRunTest = () => {
   }
   const setLocation = () => {
     const { setOrigin, map, latLngLiteralArray } = useStore.getState();
-    console.log(latLngLiteralArray);
+    // console.log(latLngLiteralArray);
     if (map && latLngLiteralArray) {
       index = nextPosition(index, latLngLiteralArray);
       const position = latLngLiteralArray[index]
       setOrigin(position)
-      console.log(position)
+      // console.log(position)
     }
   };
 
-  const intervalID = setInterval(setLocation, 5000);
+  const intervalID = setInterval(setLocation, 500);
 
 }
 const staticallyRunTest = () => {
 
-  const { setDestination } = useStore.getState();
-  // setOrigin(bmcc)
-  setDestination(neighbor);
+  const { setDestination,setOrigin } = useStore.getState();
+  setOrigin(bmcc);
+  setDestination(goldenDinner);
 
 }
 const sideWalkTest = () => {
-  const { setOrigin, setManualOrigin, latLngLiteralArray } = useStore.getState();
+  const { setOrigin, setManualOrigin, setDestination } = useStore.getState();
   setManualOrigin(true);
   // setOrigin(seven);
   setOrigin(bmcc);
-
+  // setDestination(goldenDinner);
 }
 describe('PositionMarker Component', () => {
   // Comment out or conditionally disable this function call
@@ -65,10 +66,12 @@ describe('PositionMarker Component', () => {
     const viewPortWidth = 700;
     cy.viewport(viewPortWidth, viewPortWidth)
     cy.get('.searchBar', { timeout: 1000 }).should('be.visible')
+    setZoomLevel(17)
     // dynamicallyRunTest();
     // staticallyRunTest();
-    setZoomLevel(17)
     sideWalkTest();
+    // setZoomLevel(17)
+    // dynamicallyRunTest();
   });
 
 
